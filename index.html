@@ -64,17 +64,6 @@
             }
         }
         
-        h1::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--muted-green) 0%, var(--muted-blue) 100%);
-            border-radius: 2px;
-        }
-        
         h2 {
             color: var(--muted-green);
             font-weight: 500;
@@ -386,11 +375,88 @@
             .button-sections {
                 grid-template-columns: 1fr;
                 gap: 12px;
+                /* On mobile, always show expanded state */
+                max-height: none !important;
+                overflow: visible !important;
+                padding: 12px 0 !important;
             }
             
             .button-sections.expanded {
-                max-height: 400px;
+                max-height: none;
+                height: auto;
                 padding-top: 12px;
+            }
+            
+            /* Mobile slide-out menu */
+            .save-controls {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 300px;
+                height: 100vh;
+                background: var(--white);
+                box-shadow: -4px 0 12px rgba(0,0,0,0.15);
+                z-index: 1000;
+                transition: right 0.3s ease;
+                overflow-y: auto;
+                padding: 20px;
+                margin: 0;
+            }
+            
+            .save-controls.mobile-open {
+                right: 0;
+            }
+            
+            .mobile-close-btn {
+                display: block;
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                background: none;
+                border: none;
+                font-size: 24px;
+                cursor: pointer;
+                color: var(--black);
+                padding: 5px;
+            }
+            
+            .mobile-menu-trigger {
+                display: block;
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--muted-green);
+                color: white;
+                border: none;
+                padding: 12px;
+                border-radius: 0;
+                font-size: 18px;
+                cursor: pointer;
+                z-index: 999;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            }
+            
+            .mobile-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 999;
+            }
+            
+            .mobile-overlay.active {
+                display: block;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .mobile-close-btn,
+            .mobile-menu-trigger,
+            .mobile-overlay {
+                display: none !important;
             }
         }
         
@@ -471,9 +537,47 @@
             color: white;
         }
         
-        .btn-compact:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        .mobile-close-btn {
+            display: none;
+        }
+        
+        .mobile-menu-trigger {
+            display: none;
+        }
+        
+        .mobile-overlay {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu-trigger {
+                display: block !important;
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--muted-green);
+                color: white;
+                border: none;
+                padding: 8px 12px;
+                border-radius: 0;
+                font-size: 18px;
+                cursor: pointer;
+                z-index: 999;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+            
+            .mobile-close-btn {
+                display: block !important;
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                background: none;
+                border: none;
+                font-size: 24px;
+                cursor: pointer;
+                color: var(--black);
+                padding: 5px;
+            }
         }
         
         .file-input {
@@ -665,8 +769,17 @@
     <div class="container">
         <h1>Concrete Calculator & Mix Log</h1>
         
+        <!-- Mobile Menu Trigger -->
+        <button class="mobile-menu-trigger" onclick="toggleMobileMenu()">☰</button>
+        
+        <!-- Mobile Overlay -->
+        <div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+        
         <!-- Save/Load Controls -->
-        <div class="save-controls">
+        <div class="save-controls" id="saveControls">
+            <!-- Mobile Close Button -->
+            <button class="mobile-close-btn" onclick="closeMobileMenu()">×</button>
+            
             <h3 class="controls-title-compact" onclick="toggleDropdown()">
                 Save & Load Data
                 <span class="dropdown-arrow">▼</span>
@@ -736,7 +849,6 @@
                     <label>Plasticizer</label>
                     <div class="plasticizer-controls">
                         <input type="checkbox" id="plasticizerEnabled" onchange="togglePlasticizer()" checked>
-                        <label for="plasticizerEnabled" style="margin: 0;">Use Plasticizer</label>
                         <div class="plasticizer-input" id="plasticizerInputs">
                             <input type="number" id="plasticizerPercent" step="0.01" value="0.21" min="0" max="5" oninput="calculate()">
                             <span>% of cement weight</span>
@@ -894,11 +1006,31 @@
     <script>
         // Dropdown toggle function
         function toggleDropdown() {
-            const sections = document.getElementById('buttonSections');
-            const arrow = document.querySelector('.dropdown-arrow');
+            // Only work on desktop
+            if (window.innerWidth > 768) {
+                const sections = document.getElementById('buttonSections');
+                const arrow = document.querySelector('.dropdown-arrow');
+                
+                sections.classList.toggle('expanded');
+                arrow.classList.toggle('expanded');
+            }
+        }
+        
+        // Mobile menu functions
+        function toggleMobileMenu() {
+            const saveControls = document.getElementById('saveControls');
+            const overlay = document.getElementById('mobileOverlay');
             
-            sections.classList.toggle('expanded');
-            arrow.classList.toggle('expanded');
+            saveControls.classList.toggle('mobile-open');
+            overlay.classList.toggle('active');
+        }
+        
+        function closeMobileMenu() {
+            const saveControls = document.getElementById('saveControls');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            saveControls.classList.remove('mobile-open');
+            overlay.classList.remove('active');
         }
         
         // Google Drive API Configuration
