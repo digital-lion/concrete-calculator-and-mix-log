@@ -1457,7 +1457,6 @@
             
             const tbody = document.getElementById('logTable').getElementsByTagName('tbody')[0];
             const headerRow = document.getElementById('logTable').getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
-            let currentColumns = headerRow.getElementsByTagName('th').length - 1; // Subtract 1 for parameter column
             
             // Calculate how many columns we need based on saved data
             let maxColumns = 0;
@@ -1467,17 +1466,21 @@
                 }
             }
             
-            console.log('Current columns:', currentColumns, 'Need columns:', maxColumns);
+            console.log('Need columns:', maxColumns);
             
             // Add new columns if needed
             let columnsAdded = 0;
-            while (currentColumns < maxColumns && columnsAdded < 20) { // Safety limit
+            while (columnsAdded < 20) { // Safety limit
+                let currentColumns = headerRow.getElementsByTagName('th').length - 1; // Recalculate each time
+                
+                if (currentColumns >= maxColumns) {
+                    break; // We have enough columns
+                }
+                
                 try {
+                    console.log('Adding column, currently have:', currentColumns);
                     addNewMixColumn();
                     columnsAdded++;
-                    // Recalculate current columns
-                    currentColumns = headerRow.getElementsByTagName('th').length - 1;
-                    console.log('Added column, now have:', currentColumns);
                 } catch (error) {
                     console.error('Error adding column:', error);
                     showMessage('error', 'Error adding columns: ' + error.message);
