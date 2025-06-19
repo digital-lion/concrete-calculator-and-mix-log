@@ -21,9 +21,15 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 24px;
+            padding: 12px;
             background: linear-gradient(135deg, #f8faf9 0%, #e8ede9 100%);
             min-height: 100vh;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 8px;
+            }
         }
         
         .container {
@@ -35,12 +41,27 @@
             border: 1px solid var(--border-light);
         }
         
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+                margin-bottom: 12px;
+            }
+        }
+        
         h1 {
             color: var(--black);
             font-weight: 600;
             font-size: 28px;
             margin-bottom: 32px;
             position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 24px;
+                margin-bottom: 20px;
+                text-align: center;
+            }
         }
         
         h1::after {
@@ -69,11 +90,25 @@
             margin-bottom: 30px;
         }
         
+        @media (max-width: 768px) {
+            .calculator-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                margin-bottom: 16px;
+            }
+        }
+        
         .input-section, .output-section {
             background: var(--light-gray);
             padding: 24px;
             border-radius: 0;
             border: 1px solid var(--border-light);
+        }
+        
+        @media (max-width: 768px) {
+            .input-section, .output-section {
+                padding: 16px;
+            }
         }
         
         .input-group {
@@ -102,6 +137,13 @@
             gap: 20px;
         }
         
+        @media (max-width: 768px) {
+            .volume-waste-row {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+        
         label {
             display: block;
             font-weight: 500;
@@ -119,6 +161,15 @@
             transition: all 0.2s ease;
             background: var(--white);
             margin: 3px 10px 3px 0 !important;
+        }
+        
+        @media (max-width: 768px) {
+            input[type="number"] {
+                width: 100% !important;
+                margin: 3px 0 !important;
+                padding: 10px 12px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
         }
         
         input[type="number"]:focus {
@@ -140,10 +191,31 @@
             gap: 10px;
         }
         
+        @media (max-width: 480px) {
+            .ratio-inputs {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+        
         .pigment-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 12px;
+        }
+        
+        @media (max-width: 768px) {
+            .pigment-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .pigment-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+            }
         }
         
         .pigment-grid input {
@@ -164,11 +236,26 @@
             gap: 10px;
         }
         
+        @media (max-width: 480px) {
+            .density-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+        
         .plasticizer-controls {
             display: flex;
             align-items: center;
             gap: 12px;
             flex-wrap: wrap;
+        }
+        
+        @media (max-width: 480px) {
+            .plasticizer-controls {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
         }
         
         .plasticizer-input {
@@ -279,6 +366,18 @@
             padding: 0;
         }
         
+        @media (max-width: 768px) {
+            .button-sections {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .button-sections.expanded {
+                max-height: 300px;
+                padding-top: 12px;
+            }
+        }
+        
         .button-sections.expanded {
             max-height: 200px;
             padding-top: 12px;
@@ -305,6 +404,13 @@
             gap: 6px;
         }
         
+        @media (max-width: 768px) {
+            .button-group-compact {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+        
         .button-group-single {
             display: flex;
         }
@@ -323,6 +429,15 @@
             justify-content: center;
             gap: 4px;
             white-space: nowrap;
+        }
+        
+        @media (max-width: 768px) {
+            .btn-compact {
+                padding: 12px 16px;
+                font-size: 12px;
+                white-space: normal;
+                text-align: center;
+            }
         }
         
         .btn-compact-blue {
@@ -449,6 +564,34 @@
             max-width: 100%;
         }
         
+        @media (max-width: 768px) {
+            .table-container {
+                font-size: 11px;
+            }
+            
+            .log-table {
+                font-size: 10px;
+                min-width: 600px; /* Ensure table doesn't get too cramped */
+            }
+            
+            .log-table th, .log-table td {
+                padding: 4px;
+            }
+            
+            .log-table .parameter-cell {
+                width: 140px;
+                font-size: 9px;
+                padding-right: 8px;
+            }
+            
+            .log-table input[type="text"], 
+            .log-table input[type="number"], 
+            .log-table input[type="date"] {
+                font-size: 10px;
+                padding: 2px;
+            }
+        }
+        
         .reference-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -504,7 +647,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Concrete Mix Calculator & Documentation System</h1>
+        <h1>Concrete Calculator & Mix Log</h1>
         
         <!-- Save/Load Controls -->
         <div class="save-controls">
@@ -530,13 +673,6 @@
                         <button class="btn-compact btn-compact-green" onclick="saveToGoogleDrive()" id="saveToGDrive" style="display:none;">Save to Drive</button>
                         <button class="btn-compact btn-compact-green" onclick="loadFromGoogleDrive()" id="loadFromGDrive" style="display:none;">Load from Drive</button>
                         <button class="btn-compact btn-compact-green" onclick="signOutGoogleDrive()" id="signOutButton" style="display:none;">Sign Out</button>
-                    </div>
-                    <!-- Debug info -->
-                    <div style="font-size: 10px; color: red; margin-top: 4px;" id="debugInfo">
-                        Auth: <span id="authStatus">visible</span> | 
-                        Save: <span id="saveStatus">hidden</span> | 
-                        Load: <span id="loadStatus">hidden</span> | 
-                        SignOut: <span id="signOutStatus">hidden</span>
                     </div>
                 </div>
                 
@@ -811,30 +947,10 @@
         }
         
         function updateDriveUI() {
-            console.log('updateDriveUI called');
-            
-            const authBtn = document.getElementById('authButton');
-            const saveBtn = document.getElementById('saveToGDrive');
-            const loadBtn = document.getElementById('loadFromGDrive');
-            const signOutBtn = document.getElementById('signOutButton');
-            
-            console.log('Button elements found:', {
-                auth: !!authBtn,
-                save: !!saveBtn,
-                load: !!loadBtn,
-                signOut: !!signOutBtn
-            });
-            
-            if (authBtn) authBtn.style.display = 'none';
-            if (saveBtn) saveBtn.style.display = 'inline-flex';
-            if (loadBtn) loadBtn.style.display = 'inline-flex';
-            if (signOutBtn) signOutBtn.style.display = 'inline-flex';
-            
-            // Update debug info
-            document.getElementById('authStatus').textContent = authBtn ? authBtn.style.display : 'not found';
-            document.getElementById('saveStatus').textContent = saveBtn ? saveBtn.style.display : 'not found';
-            document.getElementById('loadStatus').textContent = loadBtn ? loadBtn.style.display : 'not found';
-            document.getElementById('signOutStatus').textContent = signOutBtn ? signOutBtn.style.display : 'not found';
+            document.getElementById('authButton').style.display = 'none';
+            document.getElementById('saveToGDrive').style.display = 'inline-flex';
+            document.getElementById('loadFromGDrive').style.display = 'inline-flex';
+            document.getElementById('signOutButton').style.display = 'inline-flex';
             
             if (google_drive_file_id) {
                 document.getElementById('driveStatus').textContent = `✅ Connected - File: ${FILENAME}`;
@@ -844,8 +960,6 @@
         }
         
         function signOutGoogleDrive() {
-            console.log('signOutGoogleDrive called');
-            
             const token = gapi.client.getToken();
             if (token !== null) {
                 google.accounts.oauth2.revoke(token.access_token);
@@ -855,22 +969,10 @@
             google_drive_ready = false;
             google_drive_file_id = null;
             
-            const authBtn = document.getElementById('authButton');
-            const saveBtn = document.getElementById('saveToGDrive');
-            const loadBtn = document.getElementById('loadFromGDrive');
-            const signOutBtn = document.getElementById('signOutButton');
-            
-            if (authBtn) authBtn.style.display = 'inline-flex';
-            if (saveBtn) saveBtn.style.display = 'none';
-            if (loadBtn) loadBtn.style.display = 'none';
-            if (signOutBtn) signOutBtn.style.display = 'none';
-            
-            // Update debug info
-            document.getElementById('authStatus').textContent = authBtn ? authBtn.style.display : 'not found';
-            document.getElementById('saveStatus').textContent = saveBtn ? saveBtn.style.display : 'not found';
-            document.getElementById('loadStatus').textContent = loadBtn ? loadBtn.style.display : 'not found';
-            document.getElementById('signOutStatus').textContent = signOutBtn ? signOutBtn.style.display : 'not found';
-            
+            document.getElementById('authButton').style.display = 'inline-flex';
+            document.getElementById('saveToGDrive').style.display = 'none';
+            document.getElementById('loadFromGDrive').style.display = 'none';
+            document.getElementById('signOutButton').style.display = 'none';
             document.getElementById('driveStatus').textContent = '';
             
             showMessage('success', 'Signed out from Google Drive');
