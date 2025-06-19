@@ -714,7 +714,7 @@
                     document.getElementById('driveStatus').textContent = `✅ Connected - File: ${FILENAME}`;
                     showMessage('success', 'Found existing data file in Google Drive');
                 } else {
-                    // Create new file
+                    // Create new file with empty structure
                     await createNewFile();
                 }
             } catch (error) {
@@ -726,17 +726,46 @@
         async function createNewFile() {
             try {
                 console.log('Creating new file...');
+                
+                // Create empty data structure
+                const emptyData = {
+                    calculator: getCalculatorData(),
+                    mixLog: [],
+                    timestamp: new Date().toISOString(),
+                    version: '1.0'
+                };
+                
+                const dataStr = JSON.stringify(emptyData, null, 2);
+                
                 const metadata = {
                     name: FILENAME,
                     parents: ['root']
                 };
                 
-                const response = await gapi.client.drive.files.create({
-                    resource: metadata,
-                    fields: 'id'
+                // Create file with content
+                const response = await gapi.client.request({
+                    path: 'https://www.googleapis.com/upload/drive/v3/files',
+                    method: 'POST',
+                    params: {
+                        uploadType: 'multipart'
+                    },
+                    headers: {
+                        'Content-Type': 'multipart/related; boundary="foo_bar_baz"'
+                    },
+                    body: [
+                        '--foo_bar_baz',
+                        'Content-Type: application/json; charset=UTF-8',
+                        '',
+                        JSON.stringify(metadata),
+                        '--foo_bar_baz',
+                        'Content-Type: application/json',
+                        '',
+                        dataStr,
+                        '--foo_bar_baz--'
+                    ].join('\r\n')
                 });
                 
-                google_drive_file_id = response.result.id;
+                google_drive_file_id = JSON.parse(response.body).id;
                 document.getElementById('driveStatus').textContent = `✅ Connected - File: ${FILENAME} (New)`;
                 showMessage('success', 'Created new data file in Google Drive');
             } catch (error) {
@@ -1424,11 +1453,11 @@
         }
         
         function setMixLogData(data) {
-            if (!data) return;
+            if (!data || data.length === 0) return;
             
             const tbody = document.getElementById('logTable').getElementsByTagName('tbody')[0];
             const headerRow = document.getElementById('logTable').getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
-            const currentColumns = headerRow.getElementsByTagName('th').length - 1; // Subtract 1 for parameter column
+            let currentColumns = headerRow.getElementsByTagName('th').length - 1; // Subtract 1 for parameter column
             
             // Calculate how many columns we need based on saved data
             let maxColumns = 0;
@@ -1438,29 +1467,49 @@
                 }
             }
             
-            // Add new columns if needed
-            while (currentColumns < maxColumns) {
-                addNewMixColumn();
-                // Update current column count
-                const updatedColumns = headerRow.getElementsByTagName('th').length - 1;
-                if (updatedColumns <= currentColumns) break; // Prevent infinite loop
-                currentColumns = updatedColumns;
-            }
+            console.log('Current columns:', currentColumns, 'Need columns:', maxColumns);
             
-            // Now populate the data
-            const rows = tbody.getElementsByTagName('tr');
-            for (let i = 0; i < data.length && i < rows.length; i++) {
-                const inputs = rows[i].getElementsByTagName('input');
-                for (let j = 0; j < data[i].length && j < inputs.length; j++) {
-                    if (inputs[j].type === 'checkbox') {
-                        inputs[j].checked = data[i][j];
-                    } else {
-                        inputs[j].value = data[i][j];
-                    }
+            // Add new columns if needed
+            let columnsAdded = 0;
+            while (currentColumns < maxColumns && columnsAdded < 20) { // Safety limit
+                try {
+                    addNewMixColumn();
+                    columnsAdded++;
+                    // Recalculate current columns
+                    currentColumns = headerRow.getElementsByTagName('th').length - 1;
+                    console.log('Added column, now have:', currentColumns);
+                } catch (error) {
+                    console.error('Error adding column:', error);
+                    showMessage('error', 'Error adding columns: ' + error.message);
+                    break;
                 }
             }
             
-            showMessage('success', `Loaded data with ${maxColumns} mix columns`);
+            // Now populate the data
+            try {
+                const rows = tbody.getElementsByTagName('tr');
+                for (let i = 0; i < data.length && i < rows.length; i++) {
+                    const inputs = rows[i].getElementsByTagName('input');
+                    for (let j = 0; j < data[i].length && j < inputs.length; j++) {
+                        if (inputs[j]) {
+                            if (inputs[j].type === 'checkbox') {
+                                inputs[j].checked = data[i][j] === true || data[i][j] === 'true';
+                            } else {
+                                inputs[j].value = data[i][j] || '';
+                            }
+                        }
+                    }
+                }
+                
+                if (columnsAdded > 0) {
+                    showMessage('success', `Loaded data and created ${columnsAdded} new mix columns`);
+                } else {
+                    showMessage('success', 'Data loaded successfully');
+                }
+            } catch (error) {
+                console.error('Error populating data:', error);
+                showMessage('error', 'Error loading data: ' + error.message);
+            }
         }
         
         function getMixLogCSV() {
