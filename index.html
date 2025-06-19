@@ -613,63 +613,57 @@
     <script>
         
         // Google Drive API Configuration
-        const CLIENT_ID = '350363016695-78apqsmv9euhfduf0kq0uond9qub1his.apps.googleusercontent.com'; // You'll need to replace this
-        const API_KEY = 'AIzaSyAxZKU_3kZFoL-mwZey7_dCoCPsHmTEH78'; // You'll need to replace this
+        const CLIENT_ID = '350363016695-78apqsmv9euhfduf0kq0uond9qub1his.apps.googleusercontent.com';
+        const API_KEY = 'AIzaSyAxZKU_3kZFoL-mwZey7_dCoCPsHmTEH78';
         const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
         const SCOPES = 'https://www.googleapis.com/auth/drive.file';
         const FILENAME = 'concrete-calculator-data.json';
         
-        let gapi_loaded = false;
-        let gsi_loaded = false;
+        let tokenClient;
         let google_drive_ready = false;
         let google_drive_file_id = null;
         
         // Initialize Google Drive API
-        function initGoogleDrive() {
-            if (CLIENT_ID === 'YOUR_CLIENT_ID_HERE' || API_KEY === 'YOUR_API_KEY_HERE') {
-                showMessage('error', 'Google Drive API not configured. Please set up your credentials.');
-                return;
-            }
-            
-            gapiLoaded();
-            gisLoaded();
-        }
-        
-        function gapiLoaded() {
-            gapi.load('client', initializeGapiClient);
-        }
-        
-        async function initializeGapiClient() {
-            await gapi.client.init({
-                apiKey: API_KEY,
-                discoveryDocs: [DISCOVERY_DOC],
-            });
-            gapi_loaded = true;
-            maybeEnableButtons();
-        }
-        
-        function gisLoaded() {
-            tokenClient = google.accounts.oauth2.initTokenClient({
-                client_id: CLIENT_ID,
-                scope: SCOPES,
-                callback: (resp) => {
-                    if (resp.error !== undefined) {
-                        showMessage('error', 'Google Drive authentication failed');
-                        return;
-                    }
-                    google_drive_ready = true;
-                    updateDriveUI();
-                    showMessage('success', 'Connected to Google Drive!');
-                    findOrCreateFile();
-                },
-            });
-            gsi_loaded = true;
-            maybeEnableButtons();
-        }
-        
-        function maybeEnableButtons() {
-            if (gapi_loaded && gsi_loaded) {
-                document.getElementById('authButton').style.display = 'inline-block';
+        async function initGoogleDrive() {
+            try {
+                console.log('Initializing Google Drive...');
+                
+                // Initialize gapi client
+                await new Promise((resolve) => {
+                    gapi.load('client', resolve);
+                });
+                
+                await gapi.client.init({
+                    apiKey: API_KEY,
+                    discoveryDocs: [DISCOVERY_DOC],
+                });
+                
+                console.log('gapi client initialized');
+                
+                // Initialize Google Identity Services
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: CLIENT_ID,
+                    scope: SCOPES,
+                    callback: async (resp) => {
+                        console.log('OAuth response:', resp);
+                        if (resp.error !== undefined) {
+                            showMessage('error', 'Google Drive authentication failed: ' + resp.error);
+                            return;
+                        }
+                        
+                        google_drive_ready = true;
+                        updateDriveUI();
+                        showMessage('success', 'Connected to Google Drive!');
+                        await findOrCreateFile();
+                    },
+                });
+                
+                console.log('Token client created, requesting access...');
+                tokenClient.requestAccessToken({prompt: 'consent'});
+                
+            } catch (error) {
+                console.error('Error initializing Google Drive:', error);
+                showMessage('error', 'Error connecting to Google Drive: ' + error.message);
             }
         }
         
@@ -705,16 +699,10 @@
             showMessage('success', 'Signed out from Google Drive');
         }
         
-        // Authenticate with Google Drive
-        function authenticateGoogleDrive() {
-            if (!google_drive_ready) {
-                tokenClient.requestAccessToken({prompt: 'consent'});
-            }
-        }
-        
         // Find existing file or create new one
         async function findOrCreateFile() {
             try {
+                console.log('Searching for existing file...');
                 // Search for existing file
                 const response = await gapi.client.drive.files.list({
                     q: `name='${FILENAME}' and parents in 'root'`,
@@ -737,6 +725,7 @@
         
         async function createNewFile() {
             try {
+                console.log('Creating new file...');
                 const metadata = {
                     name: FILENAME,
                     parents: ['root']
@@ -759,9 +748,7 @@
         // Save data to Google Drive
         async function saveToGoogleDrive() {
             if (!google_drive_ready || !google_drive_file_id) {
-                if (!google_drive_ready) {
-                    authenticateGoogleDrive();
-                }
+                showMessage('error', 'Please connect to Google Drive first');
                 return;
             }
             
@@ -797,9 +784,7 @@
         // Load data from Google Drive
         async function loadFromGoogleDrive() {
             if (!google_drive_ready || !google_drive_file_id) {
-                if (!google_drive_ready) {
-                    authenticateGoogleDrive();
-                }
+                showMessage('error', 'Please connect to Google Drive first');
                 return;
             }
             
