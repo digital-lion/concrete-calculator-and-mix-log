@@ -1425,9 +1425,30 @@
         
         function setMixLogData(data) {
             if (!data) return;
-            const tbody = document.getElementById('logTable').getElementsByTagName('tbody')[0];
-            const rows = tbody.getElementsByTagName('tr');
             
+            const tbody = document.getElementById('logTable').getElementsByTagName('tbody')[0];
+            const headerRow = document.getElementById('logTable').getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
+            const currentColumns = headerRow.getElementsByTagName('th').length - 1; // Subtract 1 for parameter column
+            
+            // Calculate how many columns we need based on saved data
+            let maxColumns = 0;
+            for (let i = 0; i < data.length; i++) {
+                if (data[i] && data[i].length > maxColumns) {
+                    maxColumns = data[i].length;
+                }
+            }
+            
+            // Add new columns if needed
+            while (currentColumns < maxColumns) {
+                addNewMixColumn();
+                // Update current column count
+                const updatedColumns = headerRow.getElementsByTagName('th').length - 1;
+                if (updatedColumns <= currentColumns) break; // Prevent infinite loop
+                currentColumns = updatedColumns;
+            }
+            
+            // Now populate the data
+            const rows = tbody.getElementsByTagName('tr');
             for (let i = 0; i < data.length && i < rows.length; i++) {
                 const inputs = rows[i].getElementsByTagName('input');
                 for (let j = 0; j < data[i].length && j < inputs.length; j++) {
@@ -1438,6 +1459,8 @@
                     }
                 }
             }
+            
+            showMessage('success', `Loaded data with ${maxColumns} mix columns`);
         }
         
         function getMixLogCSV() {
