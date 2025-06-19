@@ -5,26 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Concrete Mix Calculator</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --muted-green: #7d8471;
+            --muted-blue: #6b7d8a;
+            --terracotta: #c17a5b;
+            --black: #1a1a1a;
+            --white: #ffffff;
+            --light-gray: #f8faf9;
+            --border-light: #e8ede9;
+        }
+        
         body {
-            font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             max-width: 1200px;
             margin: 0 auto;
             padding: 24px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #f8faf9 0%, #e8ede9 100%);
             min-height: 100vh;
         }
         
         .container {
-            background: white;
-            border-radius: 16px;
+            background: var(--white);
+            border-radius: 0;
             padding: 32px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.08);
             margin-bottom: 24px;
-            border: 1px solid rgba(139, 158, 156, 0.1);
+            border: 1px solid var(--border-light);
         }
         
         h1 {
-            color: #607d8b;
+            color: var(--black);
             font-weight: 600;
             font-size: 28px;
             margin-bottom: 32px;
@@ -38,12 +50,12 @@
             left: 0;
             width: 60px;
             height: 3px;
-            background: linear-gradient(90deg, #8b9e9c 0%, #607d8b 100%);
+            background: linear-gradient(90deg, var(--muted-green) 0%, var(--muted-blue) 100%);
             border-radius: 2px;
         }
         
         h2 {
-            color: #8b9e9c;
+            color: var(--muted-green);
             font-weight: 500;
             font-size: 20px;
             margin-top: 32px;
@@ -58,10 +70,10 @@
         }
         
         .input-section, .output-section {
-            background: #fafbfc;
+            background: var(--light-gray);
             padding: 24px;
-            border-radius: 12px;
-            border: 1px solid rgba(139, 158, 156, 0.15);
+            border-radius: 0;
+            border: 1px solid var(--border-light);
         }
         
         .input-group {
@@ -93,7 +105,7 @@
         label {
             display: block;
             font-weight: 500;
-            color: #37474f;
+            color: var(--black);
             margin-bottom: 8px;
             font-size: 14px;
         }
@@ -101,24 +113,24 @@
         input[type="number"] {
             width: 80px !important;
             padding: 12px 16px;
-            border: 2px solid #e0e7e4;
-            border-radius: 8px;
+            border: 2px solid var(--border-light);
+            border-radius: 0;
             font-size: 14px;
             transition: all 0.2s ease;
-            background: white;
+            background: var(--white);
             margin: 3px 10px 3px 0 !important;
         }
         
         input[type="number"]:focus {
             outline: none;
-            border-color: #8b9e9c;
-            box-shadow: 0 0 0 3px rgba(139, 158, 156, 0.1);
+            border-color: var(--muted-green);
+            box-shadow: 0 0 0 3px rgba(125, 132, 113, 0.1);
         }
         
         input[type="checkbox"] {
             width: 18px;
             height: 18px;
-            accent-color: #8b9e9c;
+            accent-color: var(--muted-green);
             margin-right: 8px;
         }
         
@@ -174,49 +186,49 @@
             justify-content: space-between;
             align-items: center;
             padding: 12px 16px;
-            background: white;
-            border-radius: 8px;
+            background: var(--white);
+            border-radius: 0;
             margin-bottom: 8px;
-            border: 1px solid #e0e7e4;
+            border: 1px solid var(--border-light);
             transition: all 0.2s ease;
         }
         
         .output-item:hover {
-            box-shadow: 0 2px 8px rgba(139, 158, 156, 0.1);
-            border-color: #8b9e9c;
+            box-shadow: 0 2px 8px rgba(125, 132, 113, 0.1);
+            border-color: var(--muted-green);
         }
         
         .output-value {
             font-weight: 600;
-            color: #8b9e9c;
+            color: var(--muted-green);
             font-family: 'JetBrains Mono', monospace;
         }
         
         .button {
-            background: linear-gradient(135deg, #8b9e9c 0%, #a8b5b3 100%);
+            background: linear-gradient(135deg, var(--muted-green) 0%, #8b9a7d 100%);
             color: white;
             border: none;
             padding: 8px 16px;
-            border-radius: 8px;
+            border-radius: 0;
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
             margin: 2px;
-            box-shadow: 0 2px 8px rgba(139, 158, 156, 0.2);
+            box-shadow: 0 2px 8px rgba(125, 132, 113, 0.2);
         }
         
         .button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(139, 158, 156, 0.3);
+            box-shadow: 0 4px 16px rgba(125, 132, 113, 0.3);
         }
         
         .button-secondary {
-            background: linear-gradient(135deg, #607d8b 0%, #90a4ae 100%);
+            background: linear-gradient(135deg, var(--muted-blue) 0%, #7a8b98 100%);
         }
         
         .button-danger {
-            background: linear-gradient(135deg, #d4823b 0%, #f4a261 100%);
+            background: linear-gradient(135deg, var(--terracotta) 0%, #d18b6c 100%);
         }
         
         .button-group {
@@ -227,18 +239,110 @@
         }
         
         .save-controls {
-            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(139, 158, 156, 0.2);
+            background: var(--white);
+            padding: 16px;
+            border-radius: 0;
+            border: 1px solid var(--border-light);
             margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(26, 26, 26, 0.04);
         }
         
-        .save-controls h3 {
-            margin: 0 0 8px 0;
-            color: #8b9e9c;
-            font-size: 14px;
+        .controls-title-compact {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--black);
+            margin: 0 0 12px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+        }
+        
+        .dropdown-arrow {
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .dropdown-arrow.expanded {
+            transform: rotate(180deg);
+        }
+        
+        .button-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 16px;
+            align-items: start;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0;
+        }
+        
+        .button-sections.expanded {
+            max-height: 200px;
+            padding-top: 12px;
+        }
+        
+        .button-section {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .section-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        
+        .button-group-compact {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+        
+        .button-group-single {
+            display: flex;
+        }
+        
+        .btn-compact {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
             font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+        
+        .btn-compact-blue {
+            background: linear-gradient(135deg, var(--muted-blue) 0%, #7a8b98 100%);
+            color: white;
+        }
+        
+        .btn-compact-green {
+            background: linear-gradient(135deg, var(--muted-green) 0%, #8b9a7d 100%);
+            color: white;
+        }
+        
+        .btn-compact-danger {
+            background: linear-gradient(135deg, var(--terracotta) 0%, #d18b6c 100%);
+            color: white;
+        }
+        
+        .btn-compact:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
         }
         
         .file-input {
@@ -247,7 +351,7 @@
         
         .file-input label {
             font-size: 11px;
-            color: #37474f;
+            color: var(--black);
             margin-bottom: 2px;
         }
         
@@ -271,7 +375,7 @@
         }
         
         .log-table th {
-            background: linear-gradient(135deg, #8b9e9c 0%, #a8b5b3 100%);
+            background: linear-gradient(135deg, var(--muted-green) 0%, #8b9a7d 100%);
             color: white;
             font-weight: 500;
             font-size: 13px;
@@ -289,20 +393,20 @@
         }
         
         .log-table th.drag-over {
-            border-left: 4px solid #607d8b;
-            background: linear-gradient(135deg, #607d8b 0%, #78909c 100%);
+            border-left: 4px solid var(--muted-blue);
+            background: linear-gradient(135deg, var(--muted-blue) 0%, #7a8b98 100%);
         }
         
         .log-table .parameter-cell {
-            background: #fafbfc;
+            background: var(--light-gray);
             font-weight: 500;
             text-align: right;
             width: 200px;
             position: sticky;
             left: 0;
             z-index: 1;
-            color: #37474f;
-            border-right: 2px solid #8b9e9c;
+            color: var(--black);
+            border-right: 2px solid var(--muted-green);
             padding-right: 12px;
         }
         
@@ -326,11 +430,11 @@
         }
         
         .delete-mix-btn {
-            background: #d4823b;
+            background: var(--terracotta);
             color: white;
             border: none;
             padding: 2px 6px;
-            border-radius: 4px;
+            border-radius: 0;
             font-size: 10px;
             cursor: pointer;
             margin: 1px;
@@ -353,22 +457,22 @@
         }
         
         .reference-box {
-            background: #fafbfc;
+            background: var(--light-gray);
             padding: 20px;
-            border-radius: 12px;
-            border-left: 4px solid #8b9e9c;
+            border-radius: 0;
+            border-left: 4px solid var(--muted-green);
         }
         
         .reference-box h3 {
-            color: #37474f;
+            color: var(--black);
             margin-top: 0;
             font-weight: 500;
         }
         
         .alert {
-            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-            border: 1px solid #d4823b;
-            border-radius: 8px;
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 100%);
+            border: 1px solid var(--terracotta);
+            border-radius: 0;
             padding: 12px 16px;
             margin: 16px 0;
             color: #bf360c;
@@ -377,10 +481,10 @@
         
         .success-message {
             background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
-            border: 1px solid #8b9e9c;
+            border: 1px solid var(--muted-green);
             color: #2e7d32;
             padding: 6px 8px;
-            border-radius: 4px;
+            border-radius: 0;
             margin: 4px 0;
             display: none;
             font-size: 10px;
@@ -388,10 +492,10 @@
         
         .error-message {
             background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
-            border: 1px solid #d4823b;
+            border: 1px solid var(--terracotta);
             color: #c62828;
             padding: 6px 8px;
-            border-radius: 4px;
+            border-radius: 0;
             margin: 4px 0;
             display: none;
             font-size: 10px;
@@ -400,23 +504,48 @@
 </head>
 <body>
     <div class="container">
-        <h1>🏺 Concrete Mix Calculator & Documentation System</h1>
+        <h1>Concrete Mix Calculator & Documentation System</h1>
         
         <!-- Save/Load Controls -->
         <div class="save-controls">
-            <h3>💾 Save & Load Data</h3>
-            <div class="button-group">
-                <button class="button" onclick="saveData()">Save Local</button>
-                <button class="button button-secondary" onclick="exportData()">Export JSON</button>
-                <button class="button button-secondary" onclick="exportCSV()">Export CSV</button>
-                <button class="button button-secondary" onclick="document.getElementById('fileInput').click()">Load Local</button>
-                <button class="button button-danger" onclick="clearAllData()">Clear All</button>
-            </div>
-            <div class="button-group">
-                <button class="button" onclick="initGoogleDrive()" id="authButton">🔗 Connect Google Drive</button>
-                <button class="button" onclick="saveToGoogleDrive()" id="saveToGDrive" style="display:none">☁️ Save to Drive</button>
-                <button class="button" onclick="loadFromGoogleDrive()" id="loadFromGDrive" style="display:none">📥 Load from Drive</button>
-                <button class="button button-secondary" onclick="signOutGoogleDrive()" id="signOutButton" style="display:none">🚪 Sign Out</button>
+            <h3 class="controls-title-compact" onclick="toggleDropdown()">
+                Save & Load Data
+                <span class="dropdown-arrow">▼</span>
+            </h3>
+            <div class="button-sections" id="buttonSections">
+                <div class="button-section">
+                    <div class="section-label">Local</div>
+                    <div class="button-group-compact">
+                        <button class="btn-compact btn-compact-blue" onclick="saveData()">Save Local</button>
+                        <button class="btn-compact btn-compact-blue" onclick="document.getElementById('fileInput').click()">Load Local</button>
+                        <button class="btn-compact btn-compact-blue" onclick="exportData()">Export JSON</button>
+                        <button class="btn-compact btn-compact-blue" onclick="exportCSV()">Export CSV</button>
+                    </div>
+                </div>
+                
+                <div class="button-section">
+                    <div class="section-label">Google Drive</div>
+                    <div class="button-group-compact">
+                        <button class="btn-compact btn-compact-green" onclick="initGoogleDrive()" id="authButton">Connect to Drive</button>
+                        <button class="btn-compact btn-compact-green" onclick="saveToGoogleDrive()" id="saveToGDrive" style="display:none;">Save to Drive</button>
+                        <button class="btn-compact btn-compact-green" onclick="loadFromGoogleDrive()" id="loadFromGDrive" style="display:none;">Load from Drive</button>
+                        <button class="btn-compact btn-compact-green" onclick="signOutGoogleDrive()" id="signOutButton" style="display:none;">Sign Out</button>
+                    </div>
+                    <!-- Debug info -->
+                    <div style="font-size: 10px; color: red; margin-top: 4px;" id="debugInfo">
+                        Auth: <span id="authStatus">visible</span> | 
+                        Save: <span id="saveStatus">hidden</span> | 
+                        Load: <span id="loadStatus">hidden</span> | 
+                        SignOut: <span id="signOutStatus">hidden</span>
+                    </div>
+                </div>
+                
+                <div class="button-section">
+                    <div class="section-label">Reset</div>
+                    <div class="button-group-single">
+                        <button class="btn-compact btn-compact-danger" onclick="clearAllData()">Clear All Data</button>
+                    </div>
+                </div>
             </div>
             <div id="driveStatus" style="font-size: 11px; color: #666; margin-top: 5px;"></div>
             <input type="file" id="fileInput" accept=".json" onchange="loadData(event)" style="display: none;">
@@ -551,7 +680,7 @@
                     <span>Plasticizer:</span>
                     <span class="output-value" id="outputPlasticizer">0 g</span>
                 </div>
-                <div class="output-item" style="border-top: 2px solid #8b9e9c; font-weight: bold;">
+                <div class="output-item" style="border-top: 2px solid var(--muted-green); font-weight: bold;">
                     <span>Total Mix Weight:</span>
                     <span class="output-value" id="outputTotal">0 g</span>
                 </div>
@@ -562,7 +691,7 @@
     </div>
     
     <div class="container">
-        <h2>🗂️ Mix Log</h2>
+        <h2>Mix Log</h2>
         
         <div class="table-container">
             <table class="log-table" id="logTable">
@@ -611,6 +740,14 @@
     <script src="https://accounts.google.com/gsi/client"></script>
 
     <script>
+        // Dropdown toggle function
+        function toggleDropdown() {
+            const sections = document.getElementById('buttonSections');
+            const arrow = document.querySelector('.dropdown-arrow');
+            
+            sections.classList.toggle('expanded');
+            arrow.classList.toggle('expanded');
+        }
         
         // Google Drive API Configuration
         const CLIENT_ID = '350363016695-9itltindfq1hfg72e6tofvqpeshf09tt.apps.googleusercontent.com';
@@ -625,6 +762,12 @@
         
         // Initialize Google Drive API
         async function initGoogleDrive() {
+            // Check if we're running on file:// protocol
+            if (window.location.protocol === 'file:') {
+                showMessage('error', 'Google Drive requires HTTPS. Please serve this file through a web server or use localhost.');
+                return;
+            }
+            
             try {
                 console.log('Initializing Google Drive...');
                 
@@ -668,10 +811,30 @@
         }
         
         function updateDriveUI() {
-            document.getElementById('authButton').style.display = 'none';
-            document.getElementById('saveToGDrive').style.display = 'inline-block';
-            document.getElementById('loadFromGDrive').style.display = 'inline-block';
-            document.getElementById('signOutButton').style.display = 'inline-block';
+            console.log('updateDriveUI called');
+            
+            const authBtn = document.getElementById('authButton');
+            const saveBtn = document.getElementById('saveToGDrive');
+            const loadBtn = document.getElementById('loadFromGDrive');
+            const signOutBtn = document.getElementById('signOutButton');
+            
+            console.log('Button elements found:', {
+                auth: !!authBtn,
+                save: !!saveBtn,
+                load: !!loadBtn,
+                signOut: !!signOutBtn
+            });
+            
+            if (authBtn) authBtn.style.display = 'none';
+            if (saveBtn) saveBtn.style.display = 'inline-flex';
+            if (loadBtn) loadBtn.style.display = 'inline-flex';
+            if (signOutBtn) signOutBtn.style.display = 'inline-flex';
+            
+            // Update debug info
+            document.getElementById('authStatus').textContent = authBtn ? authBtn.style.display : 'not found';
+            document.getElementById('saveStatus').textContent = saveBtn ? saveBtn.style.display : 'not found';
+            document.getElementById('loadStatus').textContent = loadBtn ? loadBtn.style.display : 'not found';
+            document.getElementById('signOutStatus').textContent = signOutBtn ? signOutBtn.style.display : 'not found';
             
             if (google_drive_file_id) {
                 document.getElementById('driveStatus').textContent = `✅ Connected - File: ${FILENAME}`;
@@ -681,6 +844,8 @@
         }
         
         function signOutGoogleDrive() {
+            console.log('signOutGoogleDrive called');
+            
             const token = gapi.client.getToken();
             if (token !== null) {
                 google.accounts.oauth2.revoke(token.access_token);
@@ -690,10 +855,22 @@
             google_drive_ready = false;
             google_drive_file_id = null;
             
-            document.getElementById('authButton').style.display = 'inline-block';
-            document.getElementById('saveToGDrive').style.display = 'none';
-            document.getElementById('loadFromGDrive').style.display = 'none';
-            document.getElementById('signOutButton').style.display = 'none';
+            const authBtn = document.getElementById('authButton');
+            const saveBtn = document.getElementById('saveToGDrive');
+            const loadBtn = document.getElementById('loadFromGDrive');
+            const signOutBtn = document.getElementById('signOutButton');
+            
+            if (authBtn) authBtn.style.display = 'inline-flex';
+            if (saveBtn) saveBtn.style.display = 'none';
+            if (loadBtn) loadBtn.style.display = 'none';
+            if (signOutBtn) signOutBtn.style.display = 'none';
+            
+            // Update debug info
+            document.getElementById('authStatus').textContent = authBtn ? authBtn.style.display : 'not found';
+            document.getElementById('saveStatus').textContent = saveBtn ? saveBtn.style.display : 'not found';
+            document.getElementById('loadStatus').textContent = loadBtn ? loadBtn.style.display : 'not found';
+            document.getElementById('signOutStatus').textContent = signOutBtn ? signOutBtn.style.display : 'not found';
+            
             document.getElementById('driveStatus').textContent = '';
             
             showMessage('success', 'Signed out from Google Drive');
