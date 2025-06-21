@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Concrete Mix Calculator</title>
+    <title>Concrete Calculator & Mix Log</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
+        /* CSS Variables */
         :root {
             --muted-green: #7d8471;
             --muted-blue: #6b7d8a;
@@ -15,6 +16,13 @@
             --white: #ffffff;
             --light-gray: #f8faf9;
             --input-bg: #f3f3f3;
+        }
+        
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
@@ -26,59 +34,29 @@
             min-height: 100vh;
         }
         
+        /* Typography */
+        h1, h2 {
+            color: var(--muted-green);
+            font-weight: normal;
+            font-size: 28px;
+            text-transform: uppercase;
+            margin: 0 0 20px 0;
+        }
+        
         @media (max-width: 768px) {
-            body {
-                padding: 8px;
+            h1, h2 {
+                font-size: 24px;
+                text-align: left;
             }
         }
         
-        .container {
+        /* Layout */
+        .main-container {
             background: transparent;
-            border-radius: 0;
             padding: 16px;
         }
         
-        .container:last-child {
-            margin-top: 30px;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 16px;
-            }
-            
-            .container:last-child {
-                margin-top: 16px;
-            }
-        }
-        
-        h1 {
-            color: var(--muted-green);
-            font-weight: normal;
-            font-size: 28px;
-            margin-bottom: 32px;
-            position: relative;
-            text-transform: uppercase;
-        }
-        
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 24px;
-                margin-bottom: 20px;
-                text-align: center;
-            }
-        }
-        
-        h2 {
-            color: var(--muted-green);
-            font-weight: normal;
-            font-size: 28px;
-            margin-top: 0;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
-        
-        .calculator-grid {
+        .calculator-layout {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
@@ -86,13 +64,13 @@
         }
         
         @media (max-width: 768px) {
-            .calculator-grid {
+            .calculator-layout {
                 grid-template-columns: 1fr;
                 gap: 16px;
             }
         }
         
-        .input-section, .output-section {
+        .section-box {
             background: var(--white);
             padding: 24px;
             border-radius: 6px;
@@ -100,58 +78,134 @@
             min-height: 92%;
         }
         
-        .output-section {
-            display: flex;
-            flex-direction: column;
-            height: fit-content;
-        }
-        
         @media (max-width: 768px) {
-            .input-section, .output-section {
+            .section-box {
                 padding: 16px;
             }
         }
         
-        .input-group {
-            margin-bottom: 25px;
-        }
-        
-        .first-row-inputs {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-        }
-        
-        @media (max-width: 768px) {
-            .first-row-inputs {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .first-row-inputs {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-        }
-        
-        .first-row-inputs input {
-            width: 100% !important;
-            margin: 3px 0 !important;
-            box-sizing: border-box;
-        }
-        
-        .first-row-inputs label {
-            font-size: 12px;
-            color: var(--black);
-            margin-bottom: 4px;
-        }
-        
-        .output-content {
-            flex-grow: 1;
+        /* Hamburger Menu */
+        .hamburger-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--muted-green);
+            color: white;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(125, 132, 113, 0.4);
+            transition: all 0.3s ease;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hamburger-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(125, 132, 113, 0.5);
+        }
+        
+        /* Slide-out Menu */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .slide-menu {
+            position: fixed;
+            top: 0;
+            right: -390px;
+            width: 350px;
+            height: 100vh;
+            background: var(--white);
+            box-shadow: -4px 0 12px rgba(0, 0, 0, 0.15);
+            z-index: 999;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .slide-menu.show {
+            right: 0;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--black);
+            padding: 5px;
+        }
+        
+        .menu-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--muted-green);
+            margin: 20px 0 12px 0;
+        }
+        
+        .menu-section {
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .menu-button {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .btn-blue { background: var(--muted-blue); color: white; }
+        .btn-green { background: var(--muted-green); color: white; }
+        .btn-danger { background: var(--terracotta); color: white; }
+        
+        .menu-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 25px;
         }
         
         label {
@@ -163,24 +217,14 @@
         }
         
         input[type="number"], select {
-            width: 80px !important;
+            width: 80px;
             padding: 12px 16px;
             border: 2px solid var(--input-bg);
             border-radius: 6px;
             font-size: 14px;
-            transition: all 0.2s ease;
             background: var(--input-bg);
-            margin: 3px 10px 3px 0 !important;
-        }
-        
-        @media (max-width: 768px) {
-            input[type="number"], select {
-                width: calc(100% - 24px) !important;
-                margin: 3px 0 !important;
-                padding: 10px 12px;
-                font-size: 16px;
-                box-sizing: border-box;
-            }
+            margin: 3px 10px 3px 0;
+            transition: all 0.2s ease;
         }
         
         input[type="number"]:focus, select:focus {
@@ -198,77 +242,73 @@
             background: var(--input-bg);
         }
         
-        input[type="checkbox"]:not(:checked) {
-            border: 2px solid var(--input-bg);
-            background: var(--input-bg);
+        @media (max-width: 768px) {
+            input[type="number"], select {
+                width: calc(100% - 24px);
+                margin: 3px 0;
+                padding: 10px 12px;
+                font-size: 16px;
+            }
         }
         
-        .pigment-grid {
+        /* Grid Layouts */
+        .input-grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        
+        .input-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .input-grid-5 {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 12px;
         }
         
         @media (max-width: 768px) {
-            .pigment-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 8px;
-            }
+            .input-grid-4 { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .input-grid-3 { grid-template-columns: 1fr; gap: 8px; }
+            .input-grid-5 { grid-template-columns: repeat(3, 1fr); gap: 8px; }
         }
         
         @media (max-width: 480px) {
-            .pigment-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 6px;
-            }
+            .input-grid-4 { grid-template-columns: 1fr; gap: 8px; }
+            .input-grid-5 { grid-template-columns: repeat(2, 1fr); gap: 6px; }
         }
         
-        .pigment-grid input {
-            width: 100%;
+        .input-grid-4 input, .input-grid-3 input, .input-grid-5 input {
+            width: 100% !important;
+            margin: 3px 0 !important;
+        }
+        
+        .input-grid-4 label, .input-grid-3 label, .input-grid-5 label {
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+        
+        .input-grid-5 input {
             padding: 8px 6px;
             font-size: 12px;
-            margin: 2px 0;
-            box-sizing: border-box;
         }
         
         @media (max-width: 768px) {
-            .pigment-grid input {
+            .input-grid-5 input {
                 padding: 10px 12px;
                 font-size: 16px;
             }
         }
         
-        .pigment-grid label {
-            font-size: 12px;
-            margin-bottom: 4px;
-        }
-        
-        .density-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-        }
-        
-        @media (max-width: 480px) {
-            .density-grid {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-        }
-        
+        /* Plasticizer Controls */
         .plasticizer-controls {
             display: flex;
             align-items: center;
             gap: 12px;
             flex-wrap: wrap;
-        }
-        
-        @media (max-width: 480px) {
-            .plasticizer-controls {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
         }
         
         .plasticizer-input {
@@ -279,13 +319,32 @@
         
         .plasticizer-input input {
             width: 80px;
-            box-sizing: border-box;
         }
         
         @media (max-width: 768px) {
             .plasticizer-input input {
                 width: 100px;
             }
+        }
+        
+        @media (max-width: 480px) {
+            .plasticizer-controls {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+        
+        /* Output Section */
+        .output-section {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .output-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
         
         .output-item {
@@ -311,270 +370,53 @@
             font-family: 'JetBrains Mono', monospace;
         }
         
-        .button {
+        .send-btn {
             background: var(--muted-green);
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 12px 24px;
             border-radius: 6px;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
-            margin: 2px;
-            box-shadow: 0 2px 8px rgba(125, 132, 113, 0.2);
+            width: 100%;
+            margin-top: 8px;
         }
         
-        .button:hover {
+        .send-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 16px rgba(125, 132, 113, 0.3);
         }
         
-        .hamburger-menu {
-            display: none;
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: var(--muted-green);
-            color: white;
-            border: none;
-            padding: 12px;
-            cursor: pointer;
-            font-size: 18px;
-        }
-        
-        @media (max-width: 768px) {
-            .hamburger-menu {
-                display: block;
-            }
-        }
-        
-        .save-controls {
-            background: var(--white);
-            padding: 16px;
-            border-radius: 6px;
-            margin-bottom: 12px;
-            box-shadow: 2px 2px 7px 0px rgba(26, 26, 26, 0.21);
-        }
-        
-        @media (max-width: 768px) {
-            .save-controls {
-                position: fixed;
-                top: 0;
-                right: -350px;
-                width: 320px;
-                height: 100vh;
-                background: var(--white);
-                box-shadow: -4px 0 12px rgba(0,0,0,0.15);
-                z-index: 999;
-                transition: right 0.3s ease;
-                overflow-y: auto;
-                padding: 20px;
-                margin: 0;
-            }
-            
-            .save-controls.mobile-open {
-                right: 0;
-            }
-        }
-        
-        .mobile-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 998;
-        }
-        
-        .mobile-overlay.active {
-            display: block;
-        }
-        
-        .mobile-close-btn {
-            display: none;
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--black);
-            padding: 5px;
-        }
-        
-        @media (max-width: 768px) {
-            .mobile-close-btn {
-                display: block;
-            }
-        }
-        
-        .controls-title-compact {
-            font-size: 20px;
-            font-weight: 500;
-            color: var(--muted-green);
-            margin: 0;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            user-select: none;
-        }
-        
-        @media (max-width: 768px) {
-            .controls-title-compact {
-                cursor: default;
-                margin-top: 20px;
-            }
-        }
-        
-        .dropdown-arrow {
-            font-size: 12px;
-            transition: transform 0.3s ease;
-        }
-        
-        .dropdown-arrow.expanded {
-            transform: rotate(180deg);
-        }
-        
-        @media (max-width: 768px) {
-            .dropdown-arrow {
-                display: none;
-            }
-        }
-        
-        .button-sections {
-            display: grid;
-            grid-template-columns: 1fr 1fr auto;
-            gap: 16px;
-            align-items: start;
-            overflow: hidden;
-            max-height: 0;
-            transition: max-height 0.3s ease, padding 0.3s ease;
-            padding: 0;
-        }
-        
-        @media (max-width: 768px) {
-            .button-sections {
-                grid-template-columns: 1fr;
-                gap: 12px;
-                max-height: none !important;
-                overflow: visible !important;
-                padding: 12px 0 !important;
-            }
-        }
-        
-        .button-sections.expanded {
-            max-height: 200px;
-            padding-top: 12px;
-        }
-        
-        .button-section {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        
-        .section-label {
-            font-size: 11px;
-            font-weight: 600;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-        
-        .button-group-compact {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 6px;
-        }
-        
-        @media (max-width: 768px) {
-            .button-group-compact {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-        }
-        
-        .button-group-single {
-            display: flex;
-        }
-        
-        .btn-compact {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 6px;
-            font-family: 'Inter', sans-serif;
-            font-size: 11px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            white-space: nowrap;
-        }
-        
-        @media (max-width: 768px) {
-            .btn-compact {
-                padding: 12px 16px;
-                font-size: 12px;
-                white-space: normal;
-                text-align: center;
-            }
-        }
-        
-        .btn-compact-blue {
-            background: var(--muted-blue);
-            color: white;
-        }
-        
-        .btn-compact-green {
-            background: var(--muted-green);
-            color: white;
-        }
-        
-        .btn-compact-danger {
-            background: var(--terracotta);
-            color: white;
-        }
-        
+        /* Alert & Messages */
         .alert {
             background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 100%);
             border: 1px solid var(--terracotta);
-            border-radius: 0;
             padding: 12px 16px;
             margin: 16px 0;
             color: #bf360c;
             font-weight: 500;
         }
         
-        .success-message {
-            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
-            border: 1px solid var(--muted-green);
-            color: #2e7d32;
+        .message {
             padding: 6px 8px;
-            border-radius: 0;
             margin: 4px 0;
             display: none;
             font-size: 10px;
         }
         
-        .error-message {
-            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
-            border: 1px solid var(--terracotta);
-            color: #c62828;
-            padding: 6px 8px;
-            border-radius: 0;
-            margin: 4px 0;
-            display: none;
-            font-size: 10px;
+        .success { background: #e8f5e8; border: 1px solid var(--muted-green); color: #2e7d32; }
+        .error { background: #ffebee; border: 1px solid var(--terracotta); color: #c62828; }
+        
+        /* Mix Log Table */
+        .table-wrapper {
+            overflow-x: auto;
+            max-width: 100%;
+            border-radius: 6px;
+            box-shadow: 2px 2px 7px 0px rgba(26, 26, 26, 0.21);
+            background: var(--white);
+            margin-top: 30px;
         }
         
         .log-table {
@@ -601,10 +443,10 @@
             color: white;
             font-weight: 500;
             font-size: 13px;
-            position: relative;
+            border-bottom: 7px solid #f3f3f3;
         }
         
-        .log-table .parameter-cell {
+        .log-table .param-cell {
             background: var(--light-gray);
             font-weight: 500;
             text-align: right;
@@ -616,48 +458,21 @@
             padding-right: 12px;
         }
         
-        .log-table tbody tr:nth-child(odd) {
-            background-color: var(--white);
-        }
-        
-        .log-table tbody tr:nth-child(even) {
+        .log-table tbody tr:nth-child(odd) { background-color: var(--white); }
+        .log-table tbody tr:nth-child(even) { background-color: var(--light-gray); }
+        .log-table tbody tr:nth-child(odd) .param-cell,
+        .log-table tbody tr:nth-child(even) .param-cell {
             background-color: var(--light-gray);
         }
         
-        .log-table tbody tr:nth-child(odd) .parameter-cell {
-            background-color: var(--light-gray);
-        }
+        /* Table dividers */
+        .log-table tbody tr:nth-child(5) td { border-bottom: 7px solid #f3f3f3; }
+        .log-table tbody tr:nth-child(8) td { border-bottom: 7px solid #f3f3f3; }
+        .log-table tbody tr:nth-child(15) td { border-bottom: 7px solid #f3f3f3; }
+        .log-table tbody tr:nth-child(19) td { border-bottom: 7px solid #f3f3f3; }
+        .log-table tbody tr:nth-child(22) td { border-bottom: 7px solid #f3f3f3; }
         
-        .log-table tbody tr:nth-child(even) .parameter-cell {
-            background-color: var(--light-gray);
-        }
-        
-        /* Divider lines after specific rows */
-        .log-table thead tr th { /* After Parameter header */
-            border-bottom: 7px solid #f3f3f3;
-        }
-        
-        .log-table tbody tr:nth-child(5) td { /* After Adjusted Volume */
-            border-bottom: 7px solid #f3f3f3;
-        }
-        
-        .log-table tbody tr:nth-child(8) td { /* After Water */
-            border-bottom: 7px solid #f3f3f3;
-        }
-        
-        .log-table tbody tr:nth-child(15) td { /* After Plasticizer */
-            border-bottom: 7px solid #f3f3f3;
-        }
-        
-        .log-table tbody tr:nth-child(19) td { /* After Mix Notes */
-            border-bottom: 7px solid #f3f3f3;
-        }
-        
-        .log-table tbody tr:nth-child(22) td { /* After Color Evenness */
-            border-bottom: 7px solid #f3f3f3;
-        }
-        
-        .log-table input[type="text"], .log-table input[type="number"], .log-table input[type="date"], .log-table select {
+        .log-table input, .log-table select {
             width: 100%;
             border: none;
             background: transparent;
@@ -672,34 +487,21 @@
             margin: 2px;
         }
         
-        .delete-column-btn {
+        .delete-btn {
             background: var(--terracotta);
             color: white;
             border: none;
             padding: 2px 6px;
-            border-radius: 0;
             font-size: 10px;
             cursor: pointer;
             margin-left: 5px;
         }
         
-        .delete-column-btn:hover {
+        .delete-btn:hover {
             background: #bf360c;
         }
         
-        .table-container {
-            overflow-x: auto;
-            max-width: 100%;
-            border-radius: 6px;
-            box-shadow: 2px 2px 7px 0px rgba(26, 26, 26, 0.21);
-            background: var(--white);
-        }
-        
         @media (max-width: 768px) {
-            .table-container {
-                font-size: 11px;
-            }
-            
             .log-table {
                 font-size: 10px;
                 min-width: 600px;
@@ -709,16 +511,13 @@
                 padding: 4px;
             }
             
-            .log-table .parameter-cell {
+            .log-table .param-cell {
                 width: 100px;
                 font-size: 9px;
                 padding-right: 6px;
             }
             
-            .log-table input[type="text"], 
-            .log-table input[type="number"], 
-            .log-table input[type="date"],
-            .log-table select {
+            .log-table input, .log-table select {
                 font-size: 10px;
                 padding: 2px;
             }
@@ -726,65 +525,57 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>CONCRETE CALCULATOR</h1>
+    <!-- Hamburger Menu Button -->
+    <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
+    
+    <!-- Menu Overlay -->
+    <div class="menu-overlay" id="overlay" onclick="closeMenu()"></div>
+    
+    <!-- Slide-out Menu -->
+    <div class="slide-menu" id="slideMenu">
+        <button class="close-btn" onclick="closeMenu()">×</button>
         
-        <!-- Hamburger Menu Button (Mobile Only) -->
-        <button class="hamburger-menu" onclick="toggleMobileMenu()">☰</button>
+        <h3 class="menu-title">Save & Load Data</h3>
         
-        <!-- Mobile Overlay -->
-        <div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
-        
-        <!-- Save/Load Controls -->
-        <div class="save-controls" id="saveControls">
-            <!-- Mobile Close Button -->
-            <button class="mobile-close-btn" onclick="closeMobileMenu()">×</button>
-            
-            <h3 class="controls-title-compact" onclick="toggleDropdown()">
-                Save & Load Data
-                <span class="dropdown-arrow">▼</span>
-            </h3>
-            <div class="button-sections" id="buttonSections">
-                <div class="button-section">
-                    <div class="section-label">Local</div>
-                    <div class="button-group-compact">
-                        <button class="btn-compact btn-compact-blue" onclick="saveData()">Save Local</button>
-                        <button class="btn-compact btn-compact-blue" onclick="document.getElementById('fileInput').click()">Load Local</button>
-                        <button class="btn-compact btn-compact-blue" onclick="exportData()">Export JSON</button>
-                        <button class="btn-compact btn-compact-blue" onclick="exportCSV()">Export CSV</button>
-                    </div>
-                </div>
-                
-                <div class="button-section">
-                    <div class="section-label">Google Drive</div>
-                    <div class="button-group-compact">
-                        <button class="btn-compact btn-compact-green" onclick="initGoogleDrive()" id="authButton">Connect to Drive</button>
-                        <button class="btn-compact btn-compact-green" onclick="saveToGoogleDrive()" id="saveToGDrive" style="display:none;">Save to Drive</button>
-                        <button class="btn-compact btn-compact-green" onclick="loadFromGoogleDrive()" id="loadFromGDrive" style="display:none;">Load from Drive</button>
-                        <button class="btn-compact btn-compact-green" onclick="signOutGoogleDrive()" id="signOutButton" style="display:none;">Sign Out</button>
-                    </div>
-                </div>
-                
-                <div class="button-section">
-                    <div class="section-label">Reset</div>
-                    <div class="button-group-single">
-                        <button class="btn-compact btn-compact-danger" onclick="clearAllData()">Clear All Data</button>
-                    </div>
-                </div>
-            </div>
-            <div id="driveStatus" style="font-size: 11px; color: #666; margin-top: 5px;"></div>
-            <input type="file" id="fileInput" accept=".json" onchange="loadData(event)" style="display: none;">
-            <div class="success-message" id="successMessage"></div>
-            <div class="error-message" id="errorMessage"></div>
+        <div class="menu-section">
+            <div class="section-title">Local</div>
+            <button class="menu-button btn-blue" onclick="saveData()">Save Local</button>
+            <button class="menu-button btn-blue" onclick="loadLocalFile()">Load Local</button>
+            <button class="menu-button btn-blue" onclick="exportData()">Export JSON</button>
+            <button class="menu-button btn-blue" onclick="exportCSV()">Export CSV</button>
         </div>
         
-        <div class="calculator-grid">
-            <div class="input-section">
-                <h2>Input Parameters</h2>
+        <div class="menu-section">
+            <div class="section-title">Google Drive</div>
+            <button class="menu-button btn-green" onclick="connectGoogleDrive()" id="connectBtn">Connect to Drive</button>
+            <button class="menu-button btn-green" onclick="saveToGoogleDrive()" id="saveBtn" style="display:none;">Save to Drive</button>
+            <button class="menu-button btn-green" onclick="loadFromGoogleDrive()" id="loadBtn" style="display:none;">Load from Drive</button>
+            <button class="menu-button btn-green" onclick="signOutGoogleDrive()" id="signOutBtn" style="display:none;">Sign Out</button>
+        </div>
+        
+        <div class="menu-section">
+            <div class="section-title">Reset</div>
+            <button class="menu-button btn-danger" onclick="clearAllData()">Clear All Data</button>
+        </div>
+        
+        <div id="driveStatus" style="font-size: 11px; color: #666; margin-top: 5px;"></div>
+        <input type="file" id="fileInput" accept=".json" style="display: none;">
+        <div class="message success" id="successMsg"></div>
+        <div class="message error" id="errorMsg"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <h1>CONCRETE CALCULATOR</h1>
+        
+        <div class="calculator-layout">
+            <!-- Input Section -->
+            <div class="section-box">
+                <h2>INPUT PARAMETERS</h2>
                 
-                <div class="input-group">
+                <div class="form-group">
                     <label>Mix Ratio (Portland : Sand)</label>
-                    <div class="first-row-inputs">
+                    <div class="input-grid-4">
                         <div>
                             <label for="ratioPortland">Portland</label>
                             <input type="number" id="ratioPortland" step="0.1" value="1" oninput="calculate()">
@@ -804,9 +595,9 @@
                     </div>
                 </div>
 
-                <div class="input-group">
+                <div class="form-group">
                     <label>Material Densities (g/cm³)</label>
-                    <div class="density-grid">
+                    <div class="input-grid-3">
                         <div>
                             <label for="densityCement">Cement</label>
                             <input type="number" id="densityCement" step="0.001" value="1.1" oninput="calculate()">
@@ -822,9 +613,9 @@
                     </div>
                 </div>
                 
-                <div class="input-group">
+                <div class="form-group">
                     <label>Pigment Percentages (% of cement weight)</label>
-                    <div class="pigment-grid">
+                    <div class="input-grid-5">
                         <div>
                             <label for="pigmentBlack">Black %</label>
                             <input type="number" id="pigmentBlack" step="0.1" value="0" min="0" max="10" oninput="calculate()">
@@ -848,7 +639,7 @@
                     </div>
                 </div>
 
-                <div class="input-group">
+                <div class="form-group">
                     <label>Plasticizer</label>
                     <div class="plasticizer-controls">
                         <input type="checkbox" id="plasticizerEnabled" onchange="togglePlasticizer()">
@@ -864,8 +655,9 @@
                 </div>
             </div>
             
-            <div class="output-section">
-                <h2>Calculated Amounts (grams)</h2>
+            <!-- Output Section -->
+            <div class="section-box output-section">
+                <h2>CALCULATED AMOUNTS (GRAMS)</h2>
                 
                 <div class="output-content">
                     <div>
@@ -907,53 +699,52 @@
                         </div>
                     </div>
                     
-                    <button class="button" onclick="sendToLog()" style="width: 100%; padding: 12px 24px; font-size: 14px;">📋 SEND TO LOG</button>
+                    <button class="send-btn" onclick="sendToLog()">📋 SEND TO LOG</button>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <div class="container">
+        
+        <!-- Mix Log Section -->
         <h2>MIX LOG</h2>
         
-        <div class="table-container">
+        <div class="table-wrapper">
             <table class="log-table" id="logTable">
                 <thead>
                     <tr>
-                        <th class="parameter-cell">Parameter</th>
-                        <th>Mix #1 <button class="delete-column-btn" onclick="deleteColumn(1)">×</button></th>
-                        <th>Mix #2 <button class="delete-column-btn" onclick="deleteColumn(2)">×</button></th>
-                        <th>Mix #3 <button class="delete-column-btn" onclick="deleteColumn(3)">×</button></th>
-                        <th>Mix #4 <button class="delete-column-btn" onclick="deleteColumn(4)">×</button></th>
-                        <th>Mix #5 <button class="delete-column-btn" onclick="deleteColumn(5)">×</button></th>
-                        <th>Mix #6 <button class="delete-column-btn" onclick="deleteColumn(6)">×</button></th>
+                        <th class="param-cell">Parameter</th>
+                        <th>Mix #1 <button class="delete-btn" onclick="deleteColumn(1)">×</button></th>
+                        <th>Mix #2 <button class="delete-btn" onclick="deleteColumn(2)">×</button></th>
+                        <th>Mix #3 <button class="delete-btn" onclick="deleteColumn(3)">×</button></th>
+                        <th>Mix #4 <button class="delete-btn" onclick="deleteColumn(4)">×</button></th>
+                        <th>Mix #5 <button class="delete-btn" onclick="deleteColumn(5)">×</button></th>
+                        <th>Mix #6 <button class="delete-btn" onclick="deleteColumn(6)">×</button></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td class="parameter-cell">Cast Date</td><td><input type="date" onchange="updateDaysSinceCast(this, 1)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 2)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 3)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 4)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 5)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 6)"></td></tr>
-                    <tr><td class="parameter-cell">Days Since Cast</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
-                    <tr><td class="parameter-cell">Color</td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td></tr>
-                    <tr><td class="parameter-cell">Ratio (P:S)</td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td></tr>
-                    <tr><td class="parameter-cell">Adjusted Volume (in³)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
-                    <tr><td class="parameter-cell">Cement (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
-                    <tr><td class="parameter-cell">Sand (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
-                    <tr><td class="parameter-cell">Water (g)</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
-                    <tr><td class="parameter-cell">Pigment Black (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
-                    <tr><td class="parameter-cell">Pigment Blue (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
-                    <tr><td class="parameter-cell">Pigment Green (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
-                    <tr><td class="parameter-cell">Pigment Orange (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
-                    <tr><td class="parameter-cell">Pigment Brown (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
-                    <tr><td class="parameter-cell">% Pigment Total</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
-                    <tr><td class="parameter-cell">Plasticizer (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
-                    <tr><td class="parameter-cell">Slurry Coat</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
-                    <tr><td class="parameter-cell">Mold Release</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
-                    <tr><td class="parameter-cell">Vibration</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
-                    <tr><td class="parameter-cell">Mix Notes</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
-                    <tr><td class="parameter-cell">Bubble Rating (1-5)</td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td></tr>
-                    <tr><td class="parameter-cell">Surface Quality</td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td></tr>
-                    <tr><td class="parameter-cell">Color Evenness</td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td></tr>
-                    <tr><td class="parameter-cell">Sealer Used</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
-                    <tr><td class="parameter-cell">Final Impressions</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                    <tr><td class="param-cell">Cast Date</td><td><input type="date" onchange="updateDaysSinceCast(this, 1)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 2)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 3)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 4)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 5)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 6)"></td></tr>
+                    <tr><td class="param-cell">Days Since Cast</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
+                    <tr><td class="param-cell">Color</td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td></tr>
+                    <tr><td class="param-cell">Ratio (P:S)</td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td></tr>
+                    <tr><td class="param-cell">Adjusted Volume (in³)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
+                    <tr><td class="param-cell">Cement (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
+                    <tr><td class="param-cell">Sand (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
+                    <tr><td class="param-cell">Water (g)</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td class="param-cell">Pigment Black (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
+                    <tr><td class="param-cell">Pigment Blue (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
+                    <tr><td class="param-cell">Pigment Green (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
+                    <tr><td class="param-cell">Pigment Orange (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
+                    <tr><td class="param-cell">Pigment Brown (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
+                    <tr><td class="param-cell">% Pigment Total</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
+                    <tr><td class="param-cell">Plasticizer (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
+                    <tr><td class="param-cell">Slurry Coat</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+                    <tr><td class="param-cell">Mold Release</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+                    <tr><td class="param-cell">Vibration</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+                    <tr><td class="param-cell">Mix Notes</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                    <tr><td class="param-cell">Bubble Rating (1-5)</td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td></tr>
+                    <tr><td class="param-cell">Surface Quality</td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td></tr>
+                    <tr><td class="param-cell">Color Evenness</td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td></tr>
+                    <tr><td class="param-cell">Sealer Used</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                    <tr><td class="param-cell">Final Impressions</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
                 </tbody>
             </table>
         </div>
@@ -964,48 +755,36 @@
     <script src="https://accounts.google.com/gsi/client"></script>
 
     <script>
-        // Mobile menu functions
-        function toggleMobileMenu() {
-            const saveControls = document.getElementById('saveControls');
-            const overlay = document.getElementById('mobileOverlay');
+        // ===== MENU FUNCTIONS (DEFINED FIRST) =====
+        function toggleMenu() {
+            const slideMenu = document.getElementById('slideMenu');
+            const overlay = document.getElementById('overlay');
             
-            saveControls.classList.toggle('mobile-open');
-            overlay.classList.toggle('active');
-        }
-        
-        function closeMobileMenu() {
-            const saveControls = document.getElementById('saveControls');
-            const overlay = document.getElementById('mobileOverlay');
-            
-            saveControls.classList.remove('mobile-open');
-            overlay.classList.remove('active');
-        }
-        
-        // Desktop dropdown toggle function
-        function toggleDropdown() {
-            if (window.innerWidth > 768) {
-                const sections = document.getElementById('buttonSections');
-                const arrow = document.querySelector('.dropdown-arrow');
-                
-                sections.classList.toggle('expanded');
-                arrow.classList.toggle('expanded');
+            // Check if menu is currently open
+            if (slideMenu.classList.contains('show')) {
+                // Close the menu
+                slideMenu.classList.remove('show');
+                overlay.classList.remove('show');
+            } else {
+                // Open the menu
+                slideMenu.classList.add('show');
+                overlay.classList.add('show');
             }
         }
         
-        // Determine predominant pigment color
+        function closeMenu() {
+            document.getElementById('slideMenu').classList.remove('show');
+            document.getElementById('overlay').classList.remove('show');
+        }
+        
+        // ===== CALCULATOR FUNCTIONS =====
         function getPredominantColor() {
-            const pigmentBlack = parseFloat(document.getElementById('pigmentBlack').value) || 0;
-            const pigmentBlue = parseFloat(document.getElementById('pigmentBlue').value) || 0;
-            const pigmentGreen = parseFloat(document.getElementById('pigmentGreen').value) || 0;
-            const pigmentOrange = parseFloat(document.getElementById('pigmentOrange').value) || 0;
-            const pigmentBrown = parseFloat(document.getElementById('pigmentBrown').value) || 0;
-            
             const pigments = [
-                { name: 'Charcoal', value: pigmentBlack }, // Black -> Charcoal
-                { name: 'Blue', value: pigmentBlue },
-                { name: 'Green', value: pigmentGreen },
-                { name: 'Terracotta', value: pigmentOrange }, // Orange -> Terracotta
-                { name: 'Brown', value: pigmentBrown }
+                { name: 'Charcoal', value: parseFloat(document.getElementById('pigmentBlack').value) || 0 },
+                { name: 'Blue', value: parseFloat(document.getElementById('pigmentBlue').value) || 0 },
+                { name: 'Green', value: parseFloat(document.getElementById('pigmentGreen').value) || 0 },
+                { name: 'Terracotta', value: parseFloat(document.getElementById('pigmentOrange').value) || 0 },
+                { name: 'Brown', value: parseFloat(document.getElementById('pigmentBrown').value) || 0 }
             ];
             
             const maxPigment = pigments.reduce((max, pigment) => 
@@ -1015,9 +794,7 @@
             return maxPigment.value > 0 ? maxPigment.name : 'Natural';
         }
         
-        // Calculate function
         function calculate() {
-            // Get input values
             const volume = parseFloat(document.getElementById('volume').value) || 0;
             const ratioPortland = parseFloat(document.getElementById('ratioPortland').value) || 1;
             const ratioSand = parseFloat(document.getElementById('ratioSand').value) || 3;
@@ -1030,53 +807,35 @@
             const pigmentOrange = parseFloat(document.getElementById('pigmentOrange').value) || 0;
             const pigmentBrown = parseFloat(document.getElementById('pigmentBrown').value) || 0;
             
-            // Material densities
             const densityCement = parseFloat(document.getElementById('densityCement').value) || 1.1;
             const densitySand = parseFloat(document.getElementById('densitySand').value) || 1.72;
             
-            // Convert cubic inches to cm³
             const volumeCm3 = volume * 16.387;
-            
-            // Apply waste factor
             const adjustedVolume = volumeCm3 * (1 + wasteFactor / 100);
-            
-            // Calculate total ratio parts
             const totalRatio = ratioPortland + ratioSand;
             
-            // Calculate volume for each component
             const cementVolume = (ratioPortland / totalRatio) * adjustedVolume;
             const sandVolume = (ratioSand / totalRatio) * adjustedVolume;
             
-            // Calculate weights
             const cementWeight = cementVolume * densityCement;
             const sandWeight = sandVolume * densitySand;
             
-            // Calculate plasticizer weight (only if enabled)
             const plasticizerEnabled = document.getElementById('plasticizerEnabled').checked;
             const plasticizerWeight = plasticizerEnabled ? (plasticizerPercent / 100) * cementWeight : 0;
             
-            // Calculate pigment weights (as percentage of cement weight)
             const pigmentBlackWeight = (pigmentBlack / 100) * cementWeight;
             const pigmentBlueWeight = (pigmentBlue / 100) * cementWeight;
             const pigmentGreenWeight = (pigmentGreen / 100) * cementWeight;
             const pigmentOrangeWeight = (pigmentOrange / 100) * cementWeight;
             const pigmentBrownWeight = (pigmentBrown / 100) * cementWeight;
             
-            // Check total pigment percentage
             const totalPigmentPercent = pigmentBlack + pigmentBlue + pigmentGreen + pigmentOrange + pigmentBrown;
-            const alertElement = document.getElementById('pigmentAlert');
-            if (totalPigmentPercent > 10) {
-                alertElement.style.display = 'block';
-            } else {
-                alertElement.style.display = 'none';
-            }
+            document.getElementById('pigmentAlert').style.display = totalPigmentPercent > 10 ? 'block' : 'none';
             
-            // Calculate total weight
             const totalWeight = cementWeight + sandWeight + plasticizerWeight +
                               pigmentBlackWeight + pigmentBlueWeight + pigmentGreenWeight + 
                               pigmentOrangeWeight + pigmentBrownWeight;
             
-            // Update output displays
             document.getElementById('outputCement').textContent = Math.round(cementWeight * 10) / 10 + ' g';
             document.getElementById('outputSand').textContent = Math.round(sandWeight * 10) / 10 + ' g';
             document.getElementById('outputPlasticizer').textContent = Math.round(plasticizerWeight * 10) / 10 + ' g';
@@ -1087,7 +846,6 @@
             document.getElementById('outputPigmentBrown').textContent = Math.round(pigmentBrownWeight * 10) / 10 + ' g';
             document.getElementById('outputTotal').textContent = Math.round(totalWeight * 10) / 10 + ' g';
             
-            // Auto-save after calculation
             autoSave();
         }
         
@@ -1095,15 +853,14 @@
             const enabled = document.getElementById('plasticizerEnabled').checked;
             const inputs = document.getElementById('plasticizerInputs');
             
-            if (enabled) {
-                inputs.style.display = 'flex';
-            } else {
-                inputs.style.display = 'none';
+            inputs.style.display = enabled ? 'flex' : 'none';
+            if (!enabled) {
                 document.getElementById('plasticizerPercent').value = '0';
             }
             calculate();
         }
         
+        // ===== MIX LOG FUNCTIONS =====
         function updateDaysSinceCast(dateInput, mixNumber) {
             if (dateInput.value) {
                 const castDate = new Date(dateInput.value);
@@ -1126,34 +883,31 @@
             const headerRow = table.getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
             const tbody = table.getElementsByTagName('tbody')[0];
             
-            const mixNumber = headerRow.getElementsByTagName('th').length; // Current number including parameter column
+            const mixNumber = headerRow.getElementsByTagName('th').length;
             
-            // Add header with delete button
             const newHeader = document.createElement('th');
-            newHeader.innerHTML = `Mix #${mixNumber} <button class="delete-column-btn" onclick="deleteColumn(${mixNumber})">×</button>`;
+            newHeader.innerHTML = `Mix #${mixNumber} <button class="delete-btn" onclick="deleteColumn(${mixNumber})">×</button>`;
             headerRow.appendChild(newHeader);
             
-            // Add cells to all rows
             const rows = tbody.getElementsByTagName('tr');
             for (let i = 0; i < rows.length; i++) {
                 const newCell = document.createElement('td');
                 
-                // Determine input type based on row
-                if (i === 0) { // Cast Date
+                if (i === 0) {
                     newCell.innerHTML = `<input type="date" onchange="updateDaysSinceCast(this, ${mixNumber})">`;
-                } else if ([1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14].includes(i)) { // Readonly fields
-                    if (i === 2 || i === 3) { // Color and Ratio - text readonly
+                } else if ([1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14].includes(i)) {
+                    if (i === 2 || i === 3) {
                         newCell.innerHTML = '<input type="text" readonly>';
-                    } else { // Numbers readonly
+                    } else {
                         newCell.innerHTML = '<input type="number" readonly>';
                     }
-                } else if (i === 7) { // Water - editable number
+                } else if (i === 7) {
                     newCell.innerHTML = '<input type="number">';
-                } else if ([15, 16, 17].includes(i)) { // Checkboxes (Slurry Coat, Mold Release, Vibration)
+                } else if ([15, 16, 17].includes(i)) {
                     newCell.innerHTML = '<input type="checkbox">';
-                } else if ([19, 20, 21].includes(i)) { // Dropdowns (Bubble Rating, Surface Quality, Color Evenness)
+                } else if ([19, 20, 21].includes(i)) {
                     newCell.innerHTML = '<select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>';
-                } else { // Text fields (Mix Notes, Sealer Used, Final Impressions)
+                } else {
                     newCell.innerHTML = '<input type="text">';
                 }
                 
@@ -1167,22 +921,18 @@
                 const headerRow = table.getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
                 const tbody = table.getElementsByTagName('tbody')[0];
                 
-                // Remove header column
                 headerRow.deleteCell(columnIndex);
                 
-                // Remove cells from all rows
                 const rows = tbody.getElementsByTagName('tr');
                 for (let i = 0; i < rows.length; i++) {
                     rows[i].deleteCell(columnIndex);
                 }
                 
-                // Renumber remaining headers and update delete buttons
                 const headers = headerRow.getElementsByTagName('th');
-                for (let i = 1; i < headers.length; i++) { // Start from 1 to skip parameter column
-                    headers[i].innerHTML = `Mix #${i} <button class="delete-column-btn" onclick="deleteColumn(${i})">×</button>`;
+                for (let i = 1; i < headers.length; i++) {
+                    headers[i].innerHTML = `Mix #${i} <button class="delete-btn" onclick="deleteColumn(${i})">×</button>`;
                 }
                 
-                // Update onchange handlers for date inputs
                 const dateInputs = tbody.getElementsByTagName('tr')[0].getElementsByTagName('input');
                 for (let i = 0; i < dateInputs.length; i++) {
                     dateInputs[i].setAttribute('onchange', `updateDaysSinceCast(this, ${i + 1})`);
@@ -1196,9 +946,8 @@
         function sendToLog() {
             const table = document.getElementById('logTable');
             const tbody = table.getElementsByTagName('tbody')[0];
-            const firstRow = tbody.getElementsByTagName('tr')[0]; // Cast Date row
+            const firstRow = tbody.getElementsByTagName('tr')[0];
             
-            // Find the first empty column
             let columnIndex = -1;
             let inputs = firstRow.getElementsByTagName('input');
             for (let i = 0; i < inputs.length; i++) {
@@ -1208,15 +957,12 @@
                 }
             }
             
-            // If no empty column found, add new column
             if (columnIndex === -1) {
                 addNewColumn();
-                // Get fresh reference to inputs after adding new column
                 inputs = firstRow.getElementsByTagName('input');
-                columnIndex = inputs.length - 1; // Last column is the newly added one
+                columnIndex = inputs.length - 1;
             }
             
-            // Get current calculator values
             const volume = parseFloat(document.getElementById('volume').value) || 0;
             const wasteFactor = parseFloat(document.getElementById('waste').value) || 0;
             const adjustedVolumeInches = volume * (1 + wasteFactor / 100);
@@ -1229,7 +975,6 @@
                                (parseFloat(document.getElementById('pigmentOrange').value) || 0) +
                                (parseFloat(document.getElementById('pigmentBrown').value) || 0);
             
-            // Get calculated values from the output
             const cementWeight = parseFloat(document.getElementById('outputCement').textContent.replace(' g', ''));
             const sandWeight = parseFloat(document.getElementById('outputSand').textContent.replace(' g', ''));
             const plasticizerWeight = parseFloat(document.getElementById('outputPlasticizer').textContent.replace(' g', ''));
@@ -1239,24 +984,15 @@
             const pigmentOrangeWeight = parseFloat(document.getElementById('outputPigmentOrange').textContent.replace(' g', ''));
             const pigmentBrownWeight = parseFloat(document.getElementById('outputPigmentBrown').textContent.replace(' g', ''));
             
-            // Fill in the log table
             const dataRows = tbody.getElementsByTagName('tr');
             
-            // Set today's date
             dataRows[0].getElementsByTagName('input')[columnIndex].value = new Date().toISOString().split('T')[0];
-            
-            // Auto-calculate days since cast (will be 0 for today)
             updateDaysSinceCast(dataRows[0].getElementsByTagName('input')[columnIndex], columnIndex + 1);
-            
-            // Fill Color (predominant pigment)
             dataRows[2].getElementsByTagName('input')[columnIndex].value = getPredominantColor();
-            
-            // Fill calculated values
             dataRows[3].getElementsByTagName('input')[columnIndex].value = `${ratioPortland}:${ratioSand}`;
             dataRows[4].getElementsByTagName('input')[columnIndex].value = adjustedVolumeInches.toFixed(2);
             dataRows[5].getElementsByTagName('input')[columnIndex].value = cementWeight.toFixed(1);
             dataRows[6].getElementsByTagName('input')[columnIndex].value = sandWeight.toFixed(1);
-            // Water is manual input - skip row 7
             dataRows[8].getElementsByTagName('input')[columnIndex].value = pigmentBlackWeight.toFixed(1);
             dataRows[9].getElementsByTagName('input')[columnIndex].value = pigmentBlueWeight.toFixed(1);
             dataRows[10].getElementsByTagName('input')[columnIndex].value = pigmentGreenWeight.toFixed(1);
@@ -1265,17 +1001,12 @@
             dataRows[13].getElementsByTagName('input')[columnIndex].value = pigmentTotal.toFixed(1);
             dataRows[14].getElementsByTagName('input')[columnIndex].value = plasticizerWeight.toFixed(1);
             
-            // Show success message
             showMessage('success', `Mix data sent to Mix #${columnIndex + 1}!`);
-            
-            // Scroll to the log table
             document.getElementById('logTable').scrollIntoView({ behavior: 'smooth' });
-            
-            // Auto-save
             autoSave();
         }
         
-        // Save/Load Functions
+        // ===== DATA MANAGEMENT FUNCTIONS =====
         function saveData() {
             const data = {
                 calculator: getCalculatorData(),
@@ -1330,28 +1061,12 @@
             showMessage('success', 'Mix log exported as CSV!');
         }
         
-        function loadData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    setCalculatorData(data.calculator);
-                    setMixLogData(data.mixLog);
-                    calculate();
-                    showMessage('success', 'Data loaded successfully!');
-                } catch (error) {
-                    showMessage('error', 'Error loading data: ' + error.message);
-                }
-            };
-            reader.readAsText(file);
+        function loadLocalFile() {
+            document.getElementById('fileInput').click();
         }
         
         function clearAllData() {
             if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
-                // Reset calculator inputs
                 document.getElementById('volume').value = '10';
                 document.getElementById('ratioPortland').value = '1';
                 document.getElementById('ratioSand').value = '3';
@@ -1366,7 +1081,6 @@
                 document.getElementById('densityCement').value = '1.1';
                 document.getElementById('densitySand').value = '1.72';
                 
-                // Clear all mix log inputs
                 const tbody = document.getElementById('logTable').getElementsByTagName('tbody')[0];
                 const inputs = tbody.getElementsByTagName('input');
                 const selects = tbody.getElementsByTagName('select');
@@ -1390,24 +1104,32 @@
         }
         
         function autoSave() {
-            const data = {
-                calculator: getCalculatorData(),
-                mixLog: getMixLogData(),
-                timestamp: new Date().toISOString()
-            };
-            localStorage.setItem('concreteCalculatorData', JSON.stringify(data));
+            try {
+                if (typeof(Storage) !== "undefined" && localStorage) {
+                    const data = {
+                        calculator: getCalculatorData(),
+                        mixLog: getMixLogData(),
+                        timestamp: new Date().toISOString()
+                    };
+                    localStorage.setItem('concreteCalculatorData', JSON.stringify(data));
+                }
+            } catch (error) {
+                console.warn('Auto-save failed - localStorage not available:', error);
+            }
         }
         
         function autoLoad() {
-            const savedData = localStorage.getItem('concreteCalculatorData');
-            if (savedData) {
-                try {
-                    const data = JSON.parse(savedData);
-                    setCalculatorData(data.calculator);
-                    setMixLogData(data.mixLog);
-                } catch (error) {
-                    console.error('Error loading saved data:', error);
+            try {
+                if (typeof(Storage) !== "undefined" && localStorage) {
+                    const savedData = localStorage.getItem('concreteCalculatorData');
+                    if (savedData) {
+                        const data = JSON.parse(savedData);
+                        setCalculatorData(data.calculator);
+                        setMixLogData(data.mixLog);
+                    }
                 }
+            } catch (error) {
+                console.warn('Auto-load failed - localStorage not available:', error);
             }
         }
         
@@ -1480,7 +1202,6 @@
             const tbody = document.getElementById('logTable').getElementsByTagName('tbody')[0];
             const headerRow = document.getElementById('logTable').getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
             
-            // Add columns if needed
             let maxColumns = 0;
             for (let i = 0; i < data.length; i++) {
                 if (data[i] && data[i].length > maxColumns) {
@@ -1492,7 +1213,6 @@
                 addNewColumn();
             }
             
-            // Populate data
             const rows = tbody.getElementsByTagName('tr');
             for (let i = 0; i < data.length && i < rows.length; i++) {
                 const inputs = rows[i].getElementsByTagName('input');
@@ -1528,7 +1248,6 @@
                 'Sealer Used', 'Final Impressions'
             ];
             
-            // Get headers from table
             const headerRow = document.getElementById('logTable').getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
             const headerCells = headerRow.getElementsByTagName('th');
             for (let i = 1; i < headerCells.length; i++) {
@@ -1564,10 +1283,9 @@
         }
         
         function showMessage(type, message) {
-            const successElement = document.getElementById('successMessage');
-            const errorElement = document.getElementById('errorMessage');
+            const successElement = document.getElementById('successMsg');
+            const errorElement = document.getElementById('errorMsg');
             
-            // Hide both first
             successElement.style.display = 'none';
             errorElement.style.display = 'none';
             
@@ -1582,7 +1300,7 @@
             }
         }
         
-        // Google Drive API Configuration
+        // ===== GOOGLE DRIVE INTEGRATION =====
         const CLIENT_ID = '350363016695-9itltindfq1hfg72e6tofvqpeshf09tt.apps.googleusercontent.com';
         const API_KEY = 'AIzaSyBVvpHKO1Xh463eemDZliTCvuk8n6tQebg';
         const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
@@ -1593,12 +1311,8 @@
         let google_drive_ready = false;
         let google_drive_file_id = null;
         
-        // Initialize Google Drive API
-        async function initGoogleDrive() {
+        async function connectGoogleDrive() {
             try {
-                console.log('Initializing Google Drive...');
-                
-                // Initialize gapi client
                 await new Promise((resolve) => {
                     gapi.load('client', resolve);
                 });
@@ -1608,14 +1322,10 @@
                     discoveryDocs: [DISCOVERY_DOC],
                 });
                 
-                console.log('gapi client initialized');
-                
-                // Initialize Google Identity Services
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: CLIENT_ID,
                     scope: SCOPES,
                     callback: async (resp) => {
-                        console.log('OAuth response:', resp);
                         if (resp.error !== undefined) {
                             showMessage('error', 'Google Drive authentication failed: ' + resp.error);
                             return;
@@ -1628,20 +1338,18 @@
                     },
                 });
                 
-                console.log('Token client created, requesting access...');
                 tokenClient.requestAccessToken({prompt: 'consent'});
                 
             } catch (error) {
-                console.error('Error initializing Google Drive:', error);
                 showMessage('error', 'Error connecting to Google Drive: ' + error.message);
             }
         }
         
         function updateDriveUI() {
-            document.getElementById('authButton').style.display = 'none';
-            document.getElementById('saveToGDrive').style.display = 'inline-flex';
-            document.getElementById('loadFromGDrive').style.display = 'inline-flex';
-            document.getElementById('signOutButton').style.display = 'inline-flex';
+            document.getElementById('connectBtn').style.display = 'none';
+            document.getElementById('saveBtn').style.display = 'block';
+            document.getElementById('loadBtn').style.display = 'block';
+            document.getElementById('signOutBtn').style.display = 'block';
             
             if (google_drive_file_id) {
                 document.getElementById('driveStatus').textContent = `✅ Connected - File: ${FILENAME}`;
@@ -1660,20 +1368,17 @@
             google_drive_ready = false;
             google_drive_file_id = null;
             
-            document.getElementById('authButton').style.display = 'inline-flex';
-            document.getElementById('saveToGDrive').style.display = 'none';
-            document.getElementById('loadFromGDrive').style.display = 'none';
-            document.getElementById('signOutButton').style.display = 'none';
+            document.getElementById('connectBtn').style.display = 'block';
+            document.getElementById('saveBtn').style.display = 'none';
+            document.getElementById('loadBtn').style.display = 'none';
+            document.getElementById('signOutBtn').style.display = 'none';
             document.getElementById('driveStatus').textContent = '';
             
             showMessage('success', 'Signed out from Google Drive');
         }
         
-        // Find existing file or create new one
         async function findOrCreateFile() {
             try {
-                console.log('Searching for existing file...');
-                // Search for existing file
                 const response = await gapi.client.drive.files.list({
                     q: `name='${FILENAME}' and parents in 'root'`,
                     fields: 'files(id, name)'
@@ -1684,20 +1389,15 @@
                     document.getElementById('driveStatus').textContent = `✅ Connected - File: ${FILENAME}`;
                     showMessage('success', 'Found existing data file in Google Drive');
                 } else {
-                    // Create new file with empty structure
                     await createNewFile();
                 }
             } catch (error) {
-                console.error('Error finding file:', error);
                 showMessage('error', 'Error connecting to Google Drive: ' + error.message);
             }
         }
         
         async function createNewFile() {
             try {
-                console.log('Creating new file...');
-                
-                // Create empty data structure
                 const emptyData = {
                     calculator: getCalculatorData(),
                     mixLog: [],
@@ -1712,7 +1412,6 @@
                     parents: ['root']
                 };
                 
-                // Create file with content
                 const response = await gapi.client.request({
                     path: 'https://www.googleapis.com/upload/drive/v3/files',
                     method: 'POST',
@@ -1739,12 +1438,10 @@
                 document.getElementById('driveStatus').textContent = `✅ Connected - File: ${FILENAME} (New)`;
                 showMessage('success', 'Created new data file in Google Drive');
             } catch (error) {
-                console.error('Error creating file:', error);
                 showMessage('error', 'Error creating file: ' + error.message);
             }
         }
         
-        // Save data to Google Drive
         async function saveToGoogleDrive() {
             if (!google_drive_ready || !google_drive_file_id) {
                 showMessage('error', 'Please connect to Google Drive first');
@@ -1761,7 +1458,7 @@
                 
                 const dataStr = JSON.stringify(data, null, 2);
                 
-                const response = await gapi.client.request({
+                await gapi.client.request({
                     path: `https://www.googleapis.com/upload/drive/v3/files/${google_drive_file_id}`,
                     method: 'PATCH',
                     params: {
@@ -1775,12 +1472,10 @@
                 
                 showMessage('success', 'Data saved to Google Drive successfully!');
             } catch (error) {
-                console.error('Error saving to Drive:', error);
                 showMessage('error', 'Error saving to Google Drive: ' + error.message);
             }
         }
         
-        // Load data from Google Drive
         async function loadFromGoogleDrive() {
             if (!google_drive_ready || !google_drive_file_id) {
                 showMessage('error', 'Please connect to Google Drive first');
@@ -1801,12 +1496,31 @@
                 
                 showMessage('success', `Data loaded from Google Drive! (${new Date(data.timestamp).toLocaleString()})`);
             } catch (error) {
-                console.error('Error loading from Drive:', error);
                 showMessage('error', 'Error loading from Google Drive: ' + error.message);
             }
         }
         
-        // Initialize calculator on page load
+        // ===== FILE INPUT HANDLER =====
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    setCalculatorData(data.calculator);
+                    setMixLogData(data.mixLog);
+                    calculate();
+                    showMessage('success', 'Data loaded successfully!');
+                } catch (error) {
+                    showMessage('error', 'Error loading data: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        });
+        
+        // ===== INITIALIZATION =====
         window.onload = function() {
             autoLoad();
             calculate();
