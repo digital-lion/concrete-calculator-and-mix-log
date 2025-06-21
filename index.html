@@ -918,6 +918,10 @@
         </div>
     </div>
 
+    <!-- Google Drive API Scripts -->
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
+
     <script>
         // Mobile menu functions
         function toggleMobileMenu() {
@@ -1531,21 +1535,228 @@
             }
         }
         
-        // Google Drive placeholders (simplified for core functionality)
-        function initGoogleDrive() {
-            showMessage('error', 'Google Drive requires HTTPS hosting. Use local save/load instead.');
+        // Google Drive API Configuration
+        const CLIENT_ID = '350363016695-9itltindfq1hfg72e6tofvqpeshf09tt.apps.googleusercontent.com';
+        const API_KEY = 'AIzaSyBVvpHKO1Xh463eemDZliTCvuk8n6tQebg';
+        const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
+        const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+        const FILENAME = 'concrete-calculator-data.json';
+        
+        let tokenClient;
+        let google_drive_ready = false;
+        let google_drive_file_id = null;
+        
+        // Initialize Google Drive API
+        async function initGoogleDrive() {
+            try {
+                console.log('Initializing Google Drive...');
+                
+                // Initialize gapi client
+                await new Promise((resolve) => {
+                    gapi.load('client', resolve);
+                });
+                
+                await gapi.client.init({
+                    apiKey: API_KEY,
+                    discoveryDocs: [DISCOVERY_DOC],
+                });
+                
+                console.log('gapi client initialized');
+                
+                // Initialize Google Identity Services
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: CLIENT_ID,
+                    scope: SCOPES,
+                    callback: async (resp) => {
+                        console.log('OAuth response:', resp);
+                        if (resp.error !== undefined) {
+                            showMessage('error', 'Google Drive authentication failed: ' + resp.error);
+                            return;
+                        }
+                        
+                        google_drive_ready = true;
+                        updateDriveUI();
+                        showMessage('success', 'Connected to Google Drive!');
+                        await findOrCreateFile();
+                    },
+                });
+                
+                console.log('Token client created, requesting access...');
+                tokenClient.requestAccessToken({prompt: 'consent'});
+                
+            } catch (error) {
+                console.error('Error initializing Google Drive:', error);
+                showMessage('error', 'Error connecting to Google Drive: ' + error.message);
+            }
         }
         
-        function saveToGoogleDrive() {
-            showMessage('error', 'Google Drive requires HTTPS hosting.');
-        }
-        
-        function loadFromGoogleDrive() {
-            showMessage('error', 'Google Drive requires HTTPS hosting.');
+        function updateDriveUI() {
+            document.getElementById('authButton').style.display = 'none';
+            document.getElementById('saveToGDrive').style.display = 'inline-flex';
+            document.getElementById('loadFromGDrive').style.display = 'inline-flex';
+            document.getElementById('signOutButton').style.display = 'inline-flex';
+            
+            if (google_drive_file_id) {
+                document.getElementById('driveStatus').textContent = `✅ Connected - File: ${FILENAME}`;
+            } else {
+                document.getElementById('driveStatus').textContent = '🔍 Connected - Searching for file...';
+            }
         }
         
         function signOutGoogleDrive() {
-            showMessage('error', 'Google Drive requires HTTPS hosting.');
+            const token = gapi.client.getToken();
+            if (token !== null) {
+                google.accounts.oauth2.revoke(token.access_token);
+                gapi.client.setToken('');
+            }
+            
+            google_drive_ready = false;
+            google_drive_file_id = null;
+            
+            document.getElementById('authButton').style.display = 'inline-flex';
+            document.getElementById('saveToGDrive').style.display = 'none';
+            document.getElementById('loadFromGDrive').style.display = 'none';
+            document.getElementById('signOutButton').style.display = 'none';
+            document.getElementById('driveStatus').textContent = '';
+            
+            showMessage('success', 'Signed out from Google Drive');
+        }
+        
+        // Find existing file or create new one
+        async function findOrCreateFile() {
+            try {
+                console.log('Searching for existing file...');
+                // Search for existing file
+                const response = await gapi.client.drive.files.list({
+                    q: `name='${FILENAME}' and parents in 'root'`,
+                    fields: 'files(id, name)'
+                });
+                
+                if (response.result.files.length > 0) {
+                    google_drive_file_id = response.result.files[0].id;
+                    document.getElementById('driveStatus').textContent = `✅ Connected - File: ${FILENAME}`;
+                    showMessage('success', 'Found existing data file in Google Drive');
+                } else {
+                    // Create new file with empty structure
+                    await createNewFile();
+                }
+            } catch (error) {
+                console.error('Error finding file:', error);
+                showMessage('error', 'Error connecting to Google Drive: ' + error.message);
+            }
+        }
+        
+        async function createNewFile() {
+            try {
+                console.log('Creating new file...');
+                
+                // Create empty data structure
+                const emptyData = {
+                    calculator: getCalculatorData(),
+                    mixLog: [],
+                    timestamp: new Date().toISOString(),
+                    version: '1.0'
+                };
+                
+                const dataStr = JSON.stringify(emptyData, null, 2);
+                
+                const metadata = {
+                    name: FILENAME,
+                    parents: ['root']
+                };
+                
+                // Create file with content
+                const response = await gapi.client.request({
+                    path: 'https://www.googleapis.com/upload/drive/v3/files',
+                    method: 'POST',
+                    params: {
+                        uploadType: 'multipart'
+                    },
+                    headers: {
+                        'Content-Type': 'multipart/related; boundary="foo_bar_baz"'
+                    },
+                    body: [
+                        '--foo_bar_baz',
+                        'Content-Type: application/json; charset=UTF-8',
+                        '',
+                        JSON.stringify(metadata),
+                        '--foo_bar_baz',
+                        'Content-Type: application/json',
+                        '',
+                        dataStr,
+                        '--foo_bar_baz--'
+                    ].join('\r\n')
+                });
+                
+                google_drive_file_id = JSON.parse(response.body).id;
+                document.getElementById('driveStatus').textContent = `✅ Connected - File: ${FILENAME} (New)`;
+                showMessage('success', 'Created new data file in Google Drive');
+            } catch (error) {
+                console.error('Error creating file:', error);
+                showMessage('error', 'Error creating file: ' + error.message);
+            }
+        }
+        
+        // Save data to Google Drive
+        async function saveToGoogleDrive() {
+            if (!google_drive_ready || !google_drive_file_id) {
+                showMessage('error', 'Please connect to Google Drive first');
+                return;
+            }
+            
+            try {
+                const data = {
+                    calculator: getCalculatorData(),
+                    mixLog: getMixLogData(),
+                    timestamp: new Date().toISOString(),
+                    version: '1.0'
+                };
+                
+                const dataStr = JSON.stringify(data, null, 2);
+                
+                const response = await gapi.client.request({
+                    path: `https://www.googleapis.com/upload/drive/v3/files/${google_drive_file_id}`,
+                    method: 'PATCH',
+                    params: {
+                        uploadType: 'media'
+                    },
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: dataStr
+                });
+                
+                showMessage('success', 'Data saved to Google Drive successfully!');
+            } catch (error) {
+                console.error('Error saving to Drive:', error);
+                showMessage('error', 'Error saving to Google Drive: ' + error.message);
+            }
+        }
+        
+        // Load data from Google Drive
+        async function loadFromGoogleDrive() {
+            if (!google_drive_ready || !google_drive_file_id) {
+                showMessage('error', 'Please connect to Google Drive first');
+                return;
+            }
+            
+            try {
+                const response = await gapi.client.drive.files.get({
+                    fileId: google_drive_file_id,
+                    alt: 'media'
+                });
+                
+                const data = JSON.parse(response.body);
+                
+                setCalculatorData(data.calculator);
+                setMixLogData(data.mixLog);
+                calculate();
+                
+                showMessage('success', `Data loaded from Google Drive! (${new Date(data.timestamp).toLocaleString()})`);
+            } catch (error) {
+                console.error('Error loading from Drive:', error);
+                showMessage('error', 'Error loading from Google Drive: ' + error.message);
+            }
         }
         
         // Initialize calculator on page load
