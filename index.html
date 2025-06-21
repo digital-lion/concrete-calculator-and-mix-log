@@ -14,7 +14,7 @@
             --black: #1a1a1a;
             --white: #ffffff;
             --light-gray: #f8faf9;
-            --border-light: #e8ede9;
+            --input-bg: #f3f3f3;
         }
         
         body {
@@ -33,27 +33,32 @@
         }
         
         .container {
-            background: var(--white);
+            background: transparent;
             border-radius: 0;
-            padding: 32px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-            margin-bottom: 24px;
-            border: 1px solid var(--border-light);
+            padding: 16px;
+        }
+        
+        .container:last-child {
+            margin-top: 30px;
         }
         
         @media (max-width: 768px) {
             .container {
                 padding: 16px;
-                margin-bottom: 12px;
+            }
+            
+            .container:last-child {
+                margin-top: 16px;
             }
         }
         
         h1 {
-            color: var(--black);
-            font-weight: 600;
+            color: var(--muted-green);
+            font-weight: normal;
             font-size: 28px;
             margin-bottom: 32px;
             position: relative;
+            text-transform: uppercase;
         }
         
         @media (max-width: 768px) {
@@ -66,17 +71,17 @@
         
         h2 {
             color: var(--muted-green);
-            font-weight: 500;
-            font-size: 20px;
+            font-weight: normal;
+            font-size: 28px;
             margin-top: 0;
             margin-bottom: 20px;
+            text-transform: uppercase;
         }
         
         .calculator-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
-            margin-bottom: 30px;
             align-items: start;
         }
         
@@ -84,22 +89,21 @@
             .calculator-grid {
                 grid-template-columns: 1fr;
                 gap: 16px;
-                margin-bottom: 16px;
             }
         }
         
         .input-section, .output-section {
-            background: var(--light-gray);
+            background: var(--white);
             padding: 24px;
-            border-radius: 0;
-            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            box-shadow: 2px 2px 7px 0px rgba(26, 26, 26, 0.21);
+            min-height: 92%;
         }
         
         .output-section {
             display: flex;
             flex-direction: column;
             height: fit-content;
-            min-height: 100%;
         }
         
         @media (max-width: 768px) {
@@ -148,7 +152,6 @@
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
         }
         
         label {
@@ -162,11 +165,11 @@
         input[type="number"], select {
             width: 80px !important;
             padding: 12px 16px;
-            border: 2px solid var(--border-light);
-            border-radius: 0;
+            border: 2px solid var(--input-bg);
+            border-radius: 6px;
             font-size: 14px;
             transition: all 0.2s ease;
-            background: var(--white);
+            background: var(--input-bg);
             margin: 3px 10px 3px 0 !important;
         }
         
@@ -191,6 +194,13 @@
             height: 18px;
             accent-color: var(--muted-green);
             margin-right: 8px;
+            border: 2px solid var(--input-bg);
+            background: var(--input-bg);
+        }
+        
+        input[type="checkbox"]:not(:checked) {
+            border: 2px solid var(--input-bg);
+            background: var(--input-bg);
         }
         
         .pigment-grid {
@@ -282,11 +292,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 16px;
-            background: var(--white);
-            border-radius: 0;
-            margin-bottom: 8px;
-            border: 1px solid var(--border-light);
+            padding: 8px 16px;
+            background: var(--input-bg);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            border: 1px solid var(--input-bg);
             transition: all 0.2s ease;
         }
         
@@ -302,11 +312,11 @@
         }
         
         .button {
-            background: linear-gradient(135deg, var(--muted-green) 0%, #8b9a7d 100%);
+            background: var(--muted-green);
             color: white;
             border: none;
             padding: 8px 16px;
-            border-radius: 0;
+            border-radius: 6px;
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
@@ -343,10 +353,9 @@
         .save-controls {
             background: var(--white);
             padding: 16px;
-            border-radius: 0;
-            border: 1px solid var(--border-light);
+            border-radius: 6px;
             margin-bottom: 12px;
-            box-shadow: 0 2px 8px rgba(26, 26, 26, 0.04);
+            box-shadow: 2px 2px 7px 0px rgba(26, 26, 26, 0.21);
         }
         
         @media (max-width: 768px) {
@@ -405,10 +414,10 @@
         }
         
         .controls-title-compact {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--black);
-            margin: 0 0 12px 0;
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--muted-green);
+            margin: 0;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -499,7 +508,7 @@
         .btn-compact {
             padding: 8px 12px;
             border: none;
-            border-radius: 0;
+            border-radius: 6px;
             font-family: 'Inter', sans-serif;
             font-size: 11px;
             font-weight: 500;
@@ -522,17 +531,17 @@
         }
         
         .btn-compact-blue {
-            background: linear-gradient(135deg, var(--muted-blue) 0%, #7a8b98 100%);
+            background: var(--muted-blue);
             color: white;
         }
         
         .btn-compact-green {
-            background: linear-gradient(135deg, var(--muted-green) 0%, #8b9a7d 100%);
+            background: var(--muted-green);
             color: white;
         }
         
         .btn-compact-danger {
-            background: linear-gradient(135deg, var(--terracotta) 0%, #d18b6c 100%);
+            background: var(--terracotta);
             color: white;
         }
         
@@ -573,17 +582,22 @@
             border-collapse: collapse;
             margin-top: 20px;
             font-size: 12px;
+            background: var(--white);
         }
         
         .log-table th, .log-table td {
-            border: 1px solid #dee2e6;
             padding: 6px;
             text-align: center;
             vertical-align: top;
+            border-right: 1px solid #e0e0e0;
+        }
+        
+        .log-table th:last-child, .log-table td:last-child {
+            border-right: none;
         }
         
         .log-table th {
-            background: linear-gradient(135deg, var(--muted-green) 0%, #8b9a7d 100%);
+            background: var(--muted-green);
             color: white;
             font-weight: 500;
             font-size: 13px;
@@ -599,7 +613,6 @@
             left: 0;
             z-index: 1;
             color: var(--black);
-            border-right: 2px solid var(--muted-green);
             padding-right: 12px;
         }
         
@@ -617,6 +630,31 @@
         
         .log-table tbody tr:nth-child(even) .parameter-cell {
             background-color: var(--light-gray);
+        }
+        
+        /* Divider lines after specific rows */
+        .log-table thead tr th { /* After Parameter header */
+            border-bottom: 7px solid #f3f3f3;
+        }
+        
+        .log-table tbody tr:nth-child(5) td { /* After Adjusted Volume */
+            border-bottom: 7px solid #f3f3f3;
+        }
+        
+        .log-table tbody tr:nth-child(8) td { /* After Water */
+            border-bottom: 7px solid #f3f3f3;
+        }
+        
+        .log-table tbody tr:nth-child(15) td { /* After Plasticizer */
+            border-bottom: 7px solid #f3f3f3;
+        }
+        
+        .log-table tbody tr:nth-child(19) td { /* After Mix Notes */
+            border-bottom: 7px solid #f3f3f3;
+        }
+        
+        .log-table tbody tr:nth-child(22) td { /* After Color Evenness */
+            border-bottom: 7px solid #f3f3f3;
         }
         
         .log-table input[type="text"], .log-table input[type="number"], .log-table input[type="date"], .log-table select {
@@ -652,6 +690,9 @@
         .table-container {
             overflow-x: auto;
             max-width: 100%;
+            border-radius: 6px;
+            box-shadow: 2px 2px 7px 0px rgba(26, 26, 26, 0.21);
+            background: var(--white);
         }
         
         @media (max-width: 768px) {
@@ -686,7 +727,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Concrete Calculator & Mix Log</h1>
+        <h1>CONCRETE CALCULATOR</h1>
         
         <!-- Hamburger Menu Button (Mobile Only) -->
         <button class="hamburger-menu" onclick="toggleMobileMenu()">☰</button>
@@ -810,8 +851,8 @@
                 <div class="input-group">
                     <label>Plasticizer</label>
                     <div class="plasticizer-controls">
-                        <input type="checkbox" id="plasticizerEnabled" onchange="togglePlasticizer()" checked>
-                        <div class="plasticizer-input" id="plasticizerInputs">
+                        <input type="checkbox" id="plasticizerEnabled" onchange="togglePlasticizer()">
+                        <div class="plasticizer-input" id="plasticizerInputs" style="display: none;">
                             <input type="number" id="plasticizerPercent" step="0.01" value="0.21" min="0" max="5" oninput="calculate()">
                             <span>% of cement weight</span>
                         </div>
@@ -860,20 +901,20 @@
                             <span>Plasticizer:</span>
                             <span class="output-value" id="outputPlasticizer">0 g</span>
                         </div>
-                        <div class="output-item" style="border-top: 2px solid var(--muted-green); font-weight: bold;">
+                        <div class="output-item" style="border-top: 2px solid var(--muted-green); font-weight: bold; margin-bottom: 8px;">
                             <span>Total Mix Weight:</span>
                             <span class="output-value" id="outputTotal">0 g</span>
                         </div>
                     </div>
                     
-                    <button class="button" onclick="sendToLog()" style="width: 100%; margin-top: 20px; padding: 12px 24px; font-size: 14px;">📋 SEND TO LOG</button>
+                    <button class="button" onclick="sendToLog()" style="width: 100%; padding: 12px 24px; font-size: 14px;">📋 SEND TO LOG</button>
                 </div>
             </div>
         </div>
     </div>
     
     <div class="container">
-        <h2>Mix Log</h2>
+        <h2>MIX LOG</h2>
         
         <div class="table-container">
             <table class="log-table" id="logTable">
@@ -894,7 +935,6 @@
                     <tr><td class="parameter-cell">Color</td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td></tr>
                     <tr><td class="parameter-cell">Ratio (P:S)</td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td></tr>
                     <tr><td class="parameter-cell">Adjusted Volume (in³)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
-                    <tr><td class="parameter-cell">% Pigment Total</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
                     <tr><td class="parameter-cell">Cement (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
                     <tr><td class="parameter-cell">Sand (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
                     <tr><td class="parameter-cell">Water (g)</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
@@ -903,6 +943,7 @@
                     <tr><td class="parameter-cell">Pigment Green (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
                     <tr><td class="parameter-cell">Pigment Orange (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
                     <tr><td class="parameter-cell">Pigment Brown (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
+                    <tr><td class="parameter-cell">% Pigment Total</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
                     <tr><td class="parameter-cell">Plasticizer (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
                     <tr><td class="parameter-cell">Slurry Coat</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
                     <tr><td class="parameter-cell">Mold Release</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
@@ -960,10 +1001,10 @@
             const pigmentBrown = parseFloat(document.getElementById('pigmentBrown').value) || 0;
             
             const pigments = [
-                { name: 'Black', value: pigmentBlack },
+                { name: 'Charcoal', value: pigmentBlack }, // Black -> Charcoal
                 { name: 'Blue', value: pigmentBlue },
                 { name: 'Green', value: pigmentGreen },
-                { name: 'Orange', value: pigmentOrange },
+                { name: 'Terracotta', value: pigmentOrange }, // Orange -> Terracotta
                 { name: 'Brown', value: pigmentBrown }
             ];
             
@@ -1100,15 +1141,19 @@
                 // Determine input type based on row
                 if (i === 0) { // Cast Date
                     newCell.innerHTML = `<input type="date" onchange="updateDaysSinceCast(this, ${mixNumber})">`;
-                } else if ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].includes(i)) { // Readonly calculated fields
-                    newCell.innerHTML = '<input type="number" readonly>';
-                } else if (i === 2) { // Color - readonly text
-                    newCell.innerHTML = '<input type="text" readonly>';
-                } else if ([14, 15, 16].includes(i)) { // Checkboxes (Slurry Coat, Mold Release, Vibration)
+                } else if ([1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14].includes(i)) { // Readonly fields
+                    if (i === 2 || i === 3) { // Color and Ratio - text readonly
+                        newCell.innerHTML = '<input type="text" readonly>';
+                    } else { // Numbers readonly
+                        newCell.innerHTML = '<input type="number" readonly>';
+                    }
+                } else if (i === 7) { // Water - editable number
+                    newCell.innerHTML = '<input type="number">';
+                } else if ([15, 16, 17].includes(i)) { // Checkboxes (Slurry Coat, Mold Release, Vibration)
                     newCell.innerHTML = '<input type="checkbox">';
-                } else if ([18, 19, 20].includes(i)) { // Dropdowns (Bubble Rating, Surface Quality, Color Evenness)
+                } else if ([19, 20, 21].includes(i)) { // Dropdowns (Bubble Rating, Surface Quality, Color Evenness)
                     newCell.innerHTML = '<select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>';
-                } else { // Text fields
+                } else { // Text fields (Mix Notes, Sealer Used, Final Impressions)
                     newCell.innerHTML = '<input type="text">';
                 }
                 
@@ -1155,7 +1200,7 @@
             
             // Find the first empty column
             let columnIndex = -1;
-            const inputs = firstRow.getElementsByTagName('input');
+            let inputs = firstRow.getElementsByTagName('input');
             for (let i = 0; i < inputs.length; i++) {
                 if (!inputs[i].value) {
                     columnIndex = i;
@@ -1166,7 +1211,9 @@
             // If no empty column found, add new column
             if (columnIndex === -1) {
                 addNewColumn();
-                columnIndex = inputs.length;
+                // Get fresh reference to inputs after adding new column
+                inputs = firstRow.getElementsByTagName('input');
+                columnIndex = inputs.length - 1; // Last column is the newly added one
             }
             
             // Get current calculator values
@@ -1207,15 +1254,15 @@
             // Fill calculated values
             dataRows[3].getElementsByTagName('input')[columnIndex].value = `${ratioPortland}:${ratioSand}`;
             dataRows[4].getElementsByTagName('input')[columnIndex].value = adjustedVolumeInches.toFixed(2);
-            dataRows[5].getElementsByTagName('input')[columnIndex].value = pigmentTotal.toFixed(1);
-            dataRows[6].getElementsByTagName('input')[columnIndex].value = cementWeight.toFixed(1);
-            dataRows[7].getElementsByTagName('input')[columnIndex].value = sandWeight.toFixed(1);
-            // Water is manual input - skip row 8
-            dataRows[9].getElementsByTagName('input')[columnIndex].value = pigmentBlackWeight.toFixed(1);
-            dataRows[10].getElementsByTagName('input')[columnIndex].value = pigmentBlueWeight.toFixed(1);
-            dataRows[11].getElementsByTagName('input')[columnIndex].value = pigmentGreenWeight.toFixed(1);
-            dataRows[12].getElementsByTagName('input')[columnIndex].value = pigmentOrangeWeight.toFixed(1);
-            dataRows[13].getElementsByTagName('input')[columnIndex].value = pigmentBrownWeight.toFixed(1);
+            dataRows[5].getElementsByTagName('input')[columnIndex].value = cementWeight.toFixed(1);
+            dataRows[6].getElementsByTagName('input')[columnIndex].value = sandWeight.toFixed(1);
+            // Water is manual input - skip row 7
+            dataRows[8].getElementsByTagName('input')[columnIndex].value = pigmentBlackWeight.toFixed(1);
+            dataRows[9].getElementsByTagName('input')[columnIndex].value = pigmentBlueWeight.toFixed(1);
+            dataRows[10].getElementsByTagName('input')[columnIndex].value = pigmentGreenWeight.toFixed(1);
+            dataRows[11].getElementsByTagName('input')[columnIndex].value = pigmentOrangeWeight.toFixed(1);
+            dataRows[12].getElementsByTagName('input')[columnIndex].value = pigmentBrownWeight.toFixed(1);
+            dataRows[13].getElementsByTagName('input')[columnIndex].value = pigmentTotal.toFixed(1);
             dataRows[14].getElementsByTagName('input')[columnIndex].value = plasticizerWeight.toFixed(1);
             
             // Show success message
@@ -1310,7 +1357,7 @@
                 document.getElementById('ratioSand').value = '3';
                 document.getElementById('waste').value = '10';
                 document.getElementById('plasticizerPercent').value = '0.21';
-                document.getElementById('plasticizerEnabled').checked = true;
+                document.getElementById('plasticizerEnabled').checked = false;
                 document.getElementById('pigmentBlack').value = '0';
                 document.getElementById('pigmentBlue').value = '0';
                 document.getElementById('pigmentGreen').value = '0';
@@ -1473,9 +1520,9 @@
             const headers = ['Parameter'];
             const parameterNames = [
                 'Cast Date', 'Days Since Cast', 'Color', 'Ratio (P:S)', 'Adjusted Volume (in³)', 
-                '% Pigment Total', 'Cement (g)', 'Sand (g)', 'Water (g)', 
+                'Cement (g)', 'Sand (g)', 'Water (g)', 
                 'Pigment Black (g)', 'Pigment Blue (g)', 'Pigment Green (g)', 
-                'Pigment Orange (g)', 'Pigment Brown (g)', 'Plasticizer (g)',
+                'Pigment Orange (g)', 'Pigment Brown (g)', '% Pigment Total', 'Plasticizer (g)',
                 'Slurry Coat', 'Mold Release', 'Vibration', 'Mix Notes',
                 'Bubble Rating (1-5)', 'Surface Quality', 'Color Evenness', 
                 'Sealer Used', 'Final Impressions'
