@@ -77,6 +77,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 30px;
             margin-bottom: 30px;
+            align-items: start;
         }
         
         @media (max-width: 768px) {
@@ -92,6 +93,13 @@
             padding: 24px;
             border-radius: 0;
             border: 1px solid var(--border-light);
+        }
+        
+        .output-section {
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            min-height: 100%;
         }
         
         @media (max-width: 768px) {
@@ -136,13 +144,6 @@
             margin-bottom: 4px;
         }
         
-        .output-section {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 100%;
-        }
-        
         .output-content {
             flex-grow: 1;
             display: flex;
@@ -158,7 +159,7 @@
             font-size: 14px;
         }
         
-        input[type="number"] {
+        input[type="number"], select {
             width: 80px !important;
             padding: 12px 16px;
             border: 2px solid var(--border-light);
@@ -170,16 +171,16 @@
         }
         
         @media (max-width: 768px) {
-            input[type="number"] {
+            input[type="number"], select {
                 width: calc(100% - 24px) !important;
                 margin: 3px 0 !important;
                 padding: 10px 12px;
-                font-size: 16px; /* Prevents zoom on iOS */
+                font-size: 16px;
                 box-sizing: border-box;
             }
         }
         
-        input[type="number"]:focus {
+        input[type="number"]:focus, select:focus {
             outline: none;
             border-color: var(--muted-green);
             box-shadow: 0 0 0 3px rgba(125, 132, 113, 0.1);
@@ -319,6 +320,26 @@
             box-shadow: 0 4px 16px rgba(125, 132, 113, 0.3);
         }
         
+        .hamburger-menu {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--muted-green);
+            color: white;
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        @media (max-width: 768px) {
+            .hamburger-menu {
+                display: block;
+            }
+        }
+        
         .save-controls {
             background: var(--white);
             padding: 16px;
@@ -326,6 +347,61 @@
             border: 1px solid var(--border-light);
             margin-bottom: 12px;
             box-shadow: 0 2px 8px rgba(26, 26, 26, 0.04);
+        }
+        
+        @media (max-width: 768px) {
+            .save-controls {
+                position: fixed;
+                top: 0;
+                right: -350px;
+                width: 320px;
+                height: 100vh;
+                background: var(--white);
+                box-shadow: -4px 0 12px rgba(0,0,0,0.15);
+                z-index: 999;
+                transition: right 0.3s ease;
+                overflow-y: auto;
+                padding: 20px;
+                margin: 0;
+            }
+            
+            .save-controls.mobile-open {
+                right: 0;
+            }
+        }
+        
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+        }
+        
+        .mobile-overlay.active {
+            display: block;
+        }
+        
+        .mobile-close-btn {
+            display: none;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--black);
+            padding: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-close-btn {
+                display: block;
+            }
         }
         
         .controls-title-compact {
@@ -340,6 +416,13 @@
             user-select: none;
         }
         
+        @media (max-width: 768px) {
+            .controls-title-compact {
+                cursor: default;
+                margin-top: 20px;
+            }
+        }
+        
         .dropdown-arrow {
             font-size: 12px;
             transition: transform 0.3s ease;
@@ -347,6 +430,12 @@
         
         .dropdown-arrow.expanded {
             transform: rotate(180deg);
+        }
+        
+        @media (max-width: 768px) {
+            .dropdown-arrow {
+                display: none;
+            }
         }
         
         .button-sections {
@@ -498,6 +587,7 @@
             color: white;
             font-weight: 500;
             font-size: 13px;
+            position: relative;
         }
         
         .log-table .parameter-cell {
@@ -513,7 +603,23 @@
             padding-right: 12px;
         }
         
-        .log-table input[type="text"], .log-table input[type="number"], .log-table input[type="date"] {
+        .log-table tbody tr:nth-child(odd) {
+            background-color: var(--white);
+        }
+        
+        .log-table tbody tr:nth-child(even) {
+            background-color: var(--light-gray);
+        }
+        
+        .log-table tbody tr:nth-child(odd) .parameter-cell {
+            background-color: var(--light-gray);
+        }
+        
+        .log-table tbody tr:nth-child(even) .parameter-cell {
+            background-color: var(--light-gray);
+        }
+        
+        .log-table input[type="text"], .log-table input[type="number"], .log-table input[type="date"], .log-table select {
             width: 100%;
             border: none;
             background: transparent;
@@ -526,6 +632,21 @@
         .log-table input[type="checkbox"] {
             transform: scale(1.2);
             margin: 2px;
+        }
+        
+        .delete-column-btn {
+            background: var(--terracotta);
+            color: white;
+            border: none;
+            padding: 2px 6px;
+            border-radius: 0;
+            font-size: 10px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        
+        .delete-column-btn:hover {
+            background: #bf360c;
         }
         
         .table-container {
@@ -555,7 +676,8 @@
             
             .log-table input[type="text"], 
             .log-table input[type="number"], 
-            .log-table input[type="date"] {
+            .log-table input[type="date"],
+            .log-table select {
                 font-size: 10px;
                 padding: 2px;
             }
@@ -566,8 +688,17 @@
     <div class="container">
         <h1>Concrete Calculator & Mix Log</h1>
         
+        <!-- Hamburger Menu Button (Mobile Only) -->
+        <button class="hamburger-menu" onclick="toggleMobileMenu()">☰</button>
+        
+        <!-- Mobile Overlay -->
+        <div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+        
         <!-- Save/Load Controls -->
         <div class="save-controls" id="saveControls">
+            <!-- Mobile Close Button -->
+            <button class="mobile-close-btn" onclick="closeMobileMenu()">×</button>
+            
             <h3 class="controls-title-compact" onclick="toggleDropdown()">
                 Save & Load Data
                 <span class="dropdown-arrow">▼</span>
@@ -611,7 +742,7 @@
                 <h2>Input Parameters</h2>
                 
                 <div class="input-group">
-                    <label>Mix Ratio (Portland : Sand) - Mold Volume (in³) - Waste Factor (%)</label>
+                    <label>Mix Ratio (Portland : Sand)</label>
                     <div class="first-row-inputs">
                         <div>
                             <label for="ratioPortland">Portland</label>
@@ -619,14 +750,14 @@
                         </div>
                         <div>
                             <label for="ratioSand">Sand</label>
-                            <input type="number" id="ratioSand" step="0.1" value="2" oninput="calculate()">
+                            <input type="number" id="ratioSand" step="0.1" value="3" oninput="calculate()">
                         </div>
                         <div>
-                            <label for="volume">Mold Volume</label>
+                            <label for="volume">Mold Volume (in³)</label>
                             <input type="number" id="volume" step="0.1" value="10" oninput="calculate()">
                         </div>
                         <div>
-                            <label for="waste">Waste Factor</label>
+                            <label for="waste">Waste Factor (%)</label>
                             <input type="number" id="waste" step="1" value="10" min="0" max="50" oninput="calculate()">
                         </div>
                     </div>
@@ -749,17 +880,18 @@
                 <thead>
                     <tr>
                         <th class="parameter-cell">Parameter</th>
-                        <th>Mix #1</th>
-                        <th>Mix #2</th>
-                        <th>Mix #3</th>
-                        <th>Mix #4</th>
-                        <th>Mix #5</th>
-                        <th>Mix #6</th>
+                        <th>Mix #1 <button class="delete-column-btn" onclick="deleteColumn(1)">×</button></th>
+                        <th>Mix #2 <button class="delete-column-btn" onclick="deleteColumn(2)">×</button></th>
+                        <th>Mix #3 <button class="delete-column-btn" onclick="deleteColumn(3)">×</button></th>
+                        <th>Mix #4 <button class="delete-column-btn" onclick="deleteColumn(4)">×</button></th>
+                        <th>Mix #5 <button class="delete-column-btn" onclick="deleteColumn(5)">×</button></th>
+                        <th>Mix #6 <button class="delete-column-btn" onclick="deleteColumn(6)">×</button></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td class="parameter-cell">Cast Date</td><td><input type="date"></td><td><input type="date"></td><td><input type="date"></td><td><input type="date"></td><td><input type="date"></td><td><input type="date"></td></tr>
+                    <tr><td class="parameter-cell">Cast Date</td><td><input type="date" onchange="updateDaysSinceCast(this, 1)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 2)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 3)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 4)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 5)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 6)"></td></tr>
                     <tr><td class="parameter-cell">Days Since Cast</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
+                    <tr><td class="parameter-cell">Color</td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td></tr>
                     <tr><td class="parameter-cell">Ratio (P:S)</td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td></tr>
                     <tr><td class="parameter-cell">Adjusted Volume (in³)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
                     <tr><td class="parameter-cell">% Pigment Total</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
@@ -773,12 +905,12 @@
                     <tr><td class="parameter-cell">Pigment Brown (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
                     <tr><td class="parameter-cell">Plasticizer (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
                     <tr><td class="parameter-cell">Slurry Coat</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
-                    <tr><td class="parameter-cell">Vibration Method</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                    <tr><td class="parameter-cell">Mold Release</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+                    <tr><td class="parameter-cell">Vibration</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
                     <tr><td class="parameter-cell">Mix Notes</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
-                    <tr><td class="parameter-cell"></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td class="parameter-cell">Bubble Rating (1-10)</td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td></tr>
-                    <tr><td class="parameter-cell">Surface Quality</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
-                    <tr><td class="parameter-cell">Color Evenness</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                    <tr><td class="parameter-cell">Bubble Rating (1-5)</td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td></tr>
+                    <tr><td class="parameter-cell">Surface Quality</td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td></tr>
+                    <tr><td class="parameter-cell">Color Evenness</td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td><td><select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td></tr>
                     <tr><td class="parameter-cell">Sealer Used</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
                     <tr><td class="parameter-cell">Final Impressions</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
                 </tbody>
@@ -787,7 +919,24 @@
     </div>
 
     <script>
-        // Dropdown toggle function
+        // Mobile menu functions
+        function toggleMobileMenu() {
+            const saveControls = document.getElementById('saveControls');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            saveControls.classList.toggle('mobile-open');
+            overlay.classList.toggle('active');
+        }
+        
+        function closeMobileMenu() {
+            const saveControls = document.getElementById('saveControls');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            saveControls.classList.remove('mobile-open');
+            overlay.classList.remove('active');
+        }
+        
+        // Desktop dropdown toggle function
         function toggleDropdown() {
             if (window.innerWidth > 768) {
                 const sections = document.getElementById('buttonSections');
@@ -798,12 +947,35 @@
             }
         }
         
+        // Determine predominant pigment color
+        function getPredominantColor() {
+            const pigmentBlack = parseFloat(document.getElementById('pigmentBlack').value) || 0;
+            const pigmentBlue = parseFloat(document.getElementById('pigmentBlue').value) || 0;
+            const pigmentGreen = parseFloat(document.getElementById('pigmentGreen').value) || 0;
+            const pigmentOrange = parseFloat(document.getElementById('pigmentOrange').value) || 0;
+            const pigmentBrown = parseFloat(document.getElementById('pigmentBrown').value) || 0;
+            
+            const pigments = [
+                { name: 'Black', value: pigmentBlack },
+                { name: 'Blue', value: pigmentBlue },
+                { name: 'Green', value: pigmentGreen },
+                { name: 'Orange', value: pigmentOrange },
+                { name: 'Brown', value: pigmentBrown }
+            ];
+            
+            const maxPigment = pigments.reduce((max, pigment) => 
+                pigment.value > max.value ? pigment : max
+            );
+            
+            return maxPigment.value > 0 ? maxPigment.name : 'Natural';
+        }
+        
         // Calculate function
         function calculate() {
             // Get input values
             const volume = parseFloat(document.getElementById('volume').value) || 0;
             const ratioPortland = parseFloat(document.getElementById('ratioPortland').value) || 1;
-            const ratioSand = parseFloat(document.getElementById('ratioSand').value) || 2;
+            const ratioSand = parseFloat(document.getElementById('ratioSand').value) || 3;
             const wasteFactor = parseFloat(document.getElementById('waste').value) || 0;
             const plasticizerPercent = parseFloat(document.getElementById('plasticizerPercent').value) || 0.21;
             
@@ -887,6 +1059,91 @@
             calculate();
         }
         
+        function updateDaysSinceCast(dateInput, mixNumber) {
+            if (dateInput.value) {
+                const castDate = new Date(dateInput.value);
+                const today = new Date();
+                const timeDiff = today.getTime() - castDate.getTime();
+                const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+                
+                const tbody = document.getElementById('logTable').getElementsByTagName('tbody')[0];
+                const daysSinceRow = tbody.getElementsByTagName('tr')[1];
+                const daysSinceInput = daysSinceRow.getElementsByTagName('input')[mixNumber - 1];
+                if (daysSinceInput) {
+                    daysSinceInput.value = daysDiff >= 0 ? daysDiff : '';
+                }
+            }
+            autoSave();
+        }
+        
+        function addNewColumn() {
+            const table = document.getElementById('logTable');
+            const headerRow = table.getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
+            const tbody = table.getElementsByTagName('tbody')[0];
+            
+            const mixNumber = headerRow.getElementsByTagName('th').length; // Current number including parameter column
+            
+            // Add header with delete button
+            const newHeader = document.createElement('th');
+            newHeader.innerHTML = `Mix #${mixNumber} <button class="delete-column-btn" onclick="deleteColumn(${mixNumber})">×</button>`;
+            headerRow.appendChild(newHeader);
+            
+            // Add cells to all rows
+            const rows = tbody.getElementsByTagName('tr');
+            for (let i = 0; i < rows.length; i++) {
+                const newCell = document.createElement('td');
+                
+                // Determine input type based on row
+                if (i === 0) { // Cast Date
+                    newCell.innerHTML = `<input type="date" onchange="updateDaysSinceCast(this, ${mixNumber})">`;
+                } else if ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].includes(i)) { // Readonly calculated fields
+                    newCell.innerHTML = '<input type="number" readonly>';
+                } else if (i === 2) { // Color - readonly text
+                    newCell.innerHTML = '<input type="text" readonly>';
+                } else if ([14, 15, 16].includes(i)) { // Checkboxes (Slurry Coat, Mold Release, Vibration)
+                    newCell.innerHTML = '<input type="checkbox">';
+                } else if ([18, 19, 20].includes(i)) { // Dropdowns (Bubble Rating, Surface Quality, Color Evenness)
+                    newCell.innerHTML = '<select><option value="">-</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>';
+                } else { // Text fields
+                    newCell.innerHTML = '<input type="text">';
+                }
+                
+                rows[i].appendChild(newCell);
+            }
+        }
+        
+        function deleteColumn(columnIndex) {
+            if (confirm(`Are you sure you want to delete Mix #${columnIndex}? This cannot be undone.`)) {
+                const table = document.getElementById('logTable');
+                const headerRow = table.getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
+                const tbody = table.getElementsByTagName('tbody')[0];
+                
+                // Remove header column
+                headerRow.deleteCell(columnIndex);
+                
+                // Remove cells from all rows
+                const rows = tbody.getElementsByTagName('tr');
+                for (let i = 0; i < rows.length; i++) {
+                    rows[i].deleteCell(columnIndex);
+                }
+                
+                // Renumber remaining headers and update delete buttons
+                const headers = headerRow.getElementsByTagName('th');
+                for (let i = 1; i < headers.length; i++) { // Start from 1 to skip parameter column
+                    headers[i].innerHTML = `Mix #${i} <button class="delete-column-btn" onclick="deleteColumn(${i})">×</button>`;
+                }
+                
+                // Update onchange handlers for date inputs
+                const dateInputs = tbody.getElementsByTagName('tr')[0].getElementsByTagName('input');
+                for (let i = 0; i < dateInputs.length; i++) {
+                    dateInputs[i].setAttribute('onchange', `updateDaysSinceCast(this, ${i + 1})`);
+                }
+                
+                showMessage('success', `Mix #${columnIndex} deleted successfully!`);
+                autoSave();
+            }
+        }
+        
         function sendToLog() {
             const table = document.getElementById('logTable');
             const tbody = table.getElementsByTagName('tbody')[0];
@@ -902,9 +1159,10 @@
                 }
             }
             
+            // If no empty column found, add new column
             if (columnIndex === -1) {
-                alert('All columns are full. Please clear a column first.');
-                return;
+                addNewColumn();
+                columnIndex = inputs.length;
             }
             
             // Get current calculator values
@@ -913,7 +1171,7 @@
             const adjustedVolumeInches = volume * (1 + wasteFactor / 100);
             
             const ratioPortland = parseFloat(document.getElementById('ratioPortland').value) || 1;
-            const ratioSand = parseFloat(document.getElementById('ratioSand').value) || 2;
+            const ratioSand = parseFloat(document.getElementById('ratioSand').value) || 3;
             const pigmentTotal = (parseFloat(document.getElementById('pigmentBlack').value) || 0) +
                                (parseFloat(document.getElementById('pigmentBlue').value) || 0) +
                                (parseFloat(document.getElementById('pigmentGreen').value) || 0) +
@@ -936,19 +1194,25 @@
             // Set today's date
             dataRows[0].getElementsByTagName('input')[columnIndex].value = new Date().toISOString().split('T')[0];
             
+            // Auto-calculate days since cast (will be 0 for today)
+            updateDaysSinceCast(dataRows[0].getElementsByTagName('input')[columnIndex], columnIndex + 1);
+            
+            // Fill Color (predominant pigment)
+            dataRows[2].getElementsByTagName('input')[columnIndex].value = getPredominantColor();
+            
             // Fill calculated values
-            dataRows[2].getElementsByTagName('input')[columnIndex].value = `${ratioPortland}:${ratioSand}`;
-            dataRows[3].getElementsByTagName('input')[columnIndex].value = adjustedVolumeInches.toFixed(2);
-            dataRows[4].getElementsByTagName('input')[columnIndex].value = pigmentTotal.toFixed(1);
-            dataRows[5].getElementsByTagName('input')[columnIndex].value = cementWeight.toFixed(1);
-            dataRows[6].getElementsByTagName('input')[columnIndex].value = sandWeight.toFixed(1);
-            // Water is manual input - skip row 7
-            dataRows[8].getElementsByTagName('input')[columnIndex].value = pigmentBlackWeight.toFixed(1);
-            dataRows[9].getElementsByTagName('input')[columnIndex].value = pigmentBlueWeight.toFixed(1);
-            dataRows[10].getElementsByTagName('input')[columnIndex].value = pigmentGreenWeight.toFixed(1);
-            dataRows[11].getElementsByTagName('input')[columnIndex].value = pigmentOrangeWeight.toFixed(1);
-            dataRows[12].getElementsByTagName('input')[columnIndex].value = pigmentBrownWeight.toFixed(1);
-            dataRows[13].getElementsByTagName('input')[columnIndex].value = plasticizerWeight.toFixed(1);
+            dataRows[3].getElementsByTagName('input')[columnIndex].value = `${ratioPortland}:${ratioSand}`;
+            dataRows[4].getElementsByTagName('input')[columnIndex].value = adjustedVolumeInches.toFixed(2);
+            dataRows[5].getElementsByTagName('input')[columnIndex].value = pigmentTotal.toFixed(1);
+            dataRows[6].getElementsByTagName('input')[columnIndex].value = cementWeight.toFixed(1);
+            dataRows[7].getElementsByTagName('input')[columnIndex].value = sandWeight.toFixed(1);
+            // Water is manual input - skip row 8
+            dataRows[9].getElementsByTagName('input')[columnIndex].value = pigmentBlackWeight.toFixed(1);
+            dataRows[10].getElementsByTagName('input')[columnIndex].value = pigmentBlueWeight.toFixed(1);
+            dataRows[11].getElementsByTagName('input')[columnIndex].value = pigmentGreenWeight.toFixed(1);
+            dataRows[12].getElementsByTagName('input')[columnIndex].value = pigmentOrangeWeight.toFixed(1);
+            dataRows[13].getElementsByTagName('input')[columnIndex].value = pigmentBrownWeight.toFixed(1);
+            dataRows[14].getElementsByTagName('input')[columnIndex].value = plasticizerWeight.toFixed(1);
             
             // Show success message
             showMessage('success', `Mix data sent to Mix #${columnIndex + 1}!`);
@@ -1039,7 +1303,7 @@
                 // Reset calculator inputs
                 document.getElementById('volume').value = '10';
                 document.getElementById('ratioPortland').value = '1';
-                document.getElementById('ratioSand').value = '2';
+                document.getElementById('ratioSand').value = '3';
                 document.getElementById('waste').value = '10';
                 document.getElementById('plasticizerPercent').value = '0.21';
                 document.getElementById('plasticizerEnabled').checked = true;
@@ -1054,12 +1318,18 @@
                 // Clear all mix log inputs
                 const tbody = document.getElementById('logTable').getElementsByTagName('tbody')[0];
                 const inputs = tbody.getElementsByTagName('input');
+                const selects = tbody.getElementsByTagName('select');
+                
                 for (let input of inputs) {
                     if (input.type === 'checkbox') {
                         input.checked = false;
                     } else {
                         input.value = '';
                     }
+                }
+                
+                for (let select of selects) {
+                    select.value = '';
                 }
                 
                 togglePlasticizer();
@@ -1112,7 +1382,7 @@
             if (!data) return;
             document.getElementById('volume').value = data.volume || '10';
             document.getElementById('ratioPortland').value = data.ratioPortland || '1';
-            document.getElementById('ratioSand').value = data.ratioSand || '2';
+            document.getElementById('ratioSand').value = data.ratioSand || '3';
             document.getElementById('waste').value = data.waste || '10';
             document.getElementById('plasticizerPercent').value = data.plasticizerPercent || '0.21';
             document.getElementById('plasticizerEnabled').checked = data.plasticizerEnabled !== false;
@@ -1133,7 +1403,9 @@
             
             for (let i = 0; i < rows.length; i++) {
                 const inputs = rows[i].getElementsByTagName('input');
+                const selects = rows[i].getElementsByTagName('select');
                 const rowData = [];
+                
                 for (let j = 0; j < inputs.length; j++) {
                     if (inputs[j].type === 'checkbox') {
                         rowData.push(inputs[j].checked);
@@ -1141,6 +1413,11 @@
                         rowData.push(inputs[j].value);
                     }
                 }
+                
+                for (let j = 0; j < selects.length; j++) {
+                    rowData.push(selects[j].value);
+                }
+                
                 data.push(rowData);
             }
             return data;
@@ -1150,33 +1427,62 @@
             if (!data || data.length === 0) return;
             
             const tbody = document.getElementById('logTable').getElementsByTagName('tbody')[0];
-            const rows = tbody.getElementsByTagName('tr');
+            const headerRow = document.getElementById('logTable').getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
             
+            // Add columns if needed
+            let maxColumns = 0;
+            for (let i = 0; i < data.length; i++) {
+                if (data[i] && data[i].length > maxColumns) {
+                    maxColumns = data[i].length;
+                }
+            }
+            
+            while (headerRow.getElementsByTagName('th').length - 1 < maxColumns) {
+                addNewColumn();
+            }
+            
+            // Populate data
+            const rows = tbody.getElementsByTagName('tr');
             for (let i = 0; i < data.length && i < rows.length; i++) {
                 const inputs = rows[i].getElementsByTagName('input');
-                for (let j = 0; j < data[i].length && j < inputs.length; j++) {
-                    if (inputs[j]) {
-                        if (inputs[j].type === 'checkbox') {
-                            inputs[j].checked = data[i][j] === true || data[i][j] === 'true';
+                const selects = rows[i].getElementsByTagName('select');
+                let inputIndex = 0;
+                let selectIndex = 0;
+                
+                for (let j = 0; j < data[i].length; j++) {
+                    if (inputIndex < inputs.length) {
+                        if (inputs[inputIndex].type === 'checkbox') {
+                            inputs[inputIndex].checked = data[i][j] === true || data[i][j] === 'true';
                         } else {
-                            inputs[j].value = data[i][j] || '';
+                            inputs[inputIndex].value = data[i][j] || '';
                         }
+                        inputIndex++;
+                    } else if (selectIndex < selects.length) {
+                        selects[selectIndex].value = data[i][j] || '';
+                        selectIndex++;
                     }
                 }
             }
         }
         
         function getMixLogCSV() {
-            const headers = ['Parameter', 'Mix #1', 'Mix #2', 'Mix #3', 'Mix #4', 'Mix #5', 'Mix #6'];
+            const headers = ['Parameter'];
             const parameterNames = [
-                'Cast Date', 'Days Since Cast', 'Ratio (P:S)', 'Adjusted Volume (in³)', 
+                'Cast Date', 'Days Since Cast', 'Color', 'Ratio (P:S)', 'Adjusted Volume (in³)', 
                 '% Pigment Total', 'Cement (g)', 'Sand (g)', 'Water (g)', 
                 'Pigment Black (g)', 'Pigment Blue (g)', 'Pigment Green (g)', 
                 'Pigment Orange (g)', 'Pigment Brown (g)', 'Plasticizer (g)',
-                'Slurry Coat', 'Vibration Method', 'Mix Notes', '',
-                'Bubble Rating (1-10)', 'Surface Quality', 'Color Evenness', 
+                'Slurry Coat', 'Mold Release', 'Vibration', 'Mix Notes',
+                'Bubble Rating (1-5)', 'Surface Quality', 'Color Evenness', 
                 'Sealer Used', 'Final Impressions'
             ];
+            
+            // Get headers from table
+            const headerRow = document.getElementById('logTable').getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
+            const headerCells = headerRow.getElementsByTagName('th');
+            for (let i = 1; i < headerCells.length; i++) {
+                headers.push(headerCells[i].textContent.replace(/×/g, '').trim());
+            }
             
             let csv = headers.join(',') + '\n';
             
@@ -1185,6 +1491,7 @@
             
             for (let i = 0; i < rows.length; i++) {
                 const inputs = rows[i].getElementsByTagName('input');
+                const selects = rows[i].getElementsByTagName('select');
                 let rowData = [parameterNames[i] || ''];
                 
                 for (let j = 0; j < inputs.length; j++) {
@@ -1194,6 +1501,11 @@
                         rowData.push(inputs[j].value || '');
                     }
                 }
+                
+                for (let j = 0; j < selects.length; j++) {
+                    rowData.push(selects[j].value || '');
+                }
+                
                 csv += rowData.join(',') + '\n';
             }
             
