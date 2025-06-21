@@ -68,7 +68,7 @@
             color: var(--muted-green);
             font-weight: 500;
             font-size: 20px;
-            margin-top: 32px;
+            margin-top: 0;
             margin-bottom: 20px;
         }
         
@@ -104,33 +104,50 @@
             margin-bottom: 25px;
         }
         
-        .input-group input[type="number"] {
-            margin-bottom: 8px;
-        }
-        
-        .volume-waste-row input[type="number"] {
-            margin-right: 10px;
-        }
-        
-        .ratio-inputs input[type="number"] {
-            margin-right: 8px;
-        }
-        
-        .density-grid input[type="number"] {
-            margin-right: 8px;
-        }
-        
-        .volume-waste-row {
+        .first-row-inputs {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
         }
         
         @media (max-width: 768px) {
-            .volume-waste-row {
-                grid-template-columns: 1fr;
-                gap: 12px;
+            .first-row-inputs {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
             }
+        }
+        
+        @media (max-width: 480px) {
+            .first-row-inputs {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+        
+        .first-row-inputs input {
+            width: 100% !important;
+            margin: 3px 0 !important;
+            box-sizing: border-box;
+        }
+        
+        .first-row-inputs label {
+            font-size: 12px;
+            color: var(--black);
+            margin-bottom: 4px;
+        }
+        
+        .output-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 100%;
+        }
+        
+        .output-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         
         label {
@@ -173,19 +190,6 @@
             height: 18px;
             accent-color: var(--muted-green);
             margin-right: 8px;
-        }
-        
-        .ratio-inputs {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-        }
-        
-        @media (max-width: 480px) {
-            .ratio-inputs {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
         }
         
         .pigment-grid {
@@ -315,21 +319,6 @@
             box-shadow: 0 4px 16px rgba(125, 132, 113, 0.3);
         }
         
-        .button-secondary {
-            background: linear-gradient(135deg, var(--muted-blue) 0%, #7a8b98 100%);
-        }
-        
-        .button-danger {
-            background: linear-gradient(135deg, var(--terracotta) 0%, #d18b6c 100%);
-        }
-        
-        .button-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin: 4px 0;
-        }
-        
         .save-controls {
             background: var(--white);
             padding: 16px;
@@ -375,88 +364,9 @@
             .button-sections {
                 grid-template-columns: 1fr;
                 gap: 12px;
-                /* On mobile, always show expanded state */
                 max-height: none !important;
                 overflow: visible !important;
                 padding: 12px 0 !important;
-            }
-            
-            .button-sections.expanded {
-                max-height: none;
-                height: auto;
-                padding-top: 12px;
-            }
-            
-            /* Mobile slide-out menu */
-            .save-controls {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 300px;
-                height: 100vh;
-                background: var(--white);
-                box-shadow: -4px 0 12px rgba(0,0,0,0.15);
-                z-index: 1000;
-                transition: right 0.3s ease;
-                overflow-y: auto;
-                padding: 20px;
-                margin: 0;
-            }
-            
-            .save-controls.mobile-open {
-                right: 0;
-            }
-            
-            .mobile-close-btn {
-                display: block;
-                position: absolute;
-                top: 10px;
-                right: 15px;
-                background: none;
-                border: none;
-                font-size: 24px;
-                cursor: pointer;
-                color: var(--black);
-                padding: 5px;
-            }
-            
-            .mobile-menu-trigger {
-                display: block;
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: var(--muted-green);
-                color: white;
-                border: none;
-                padding: 12px;
-                border-radius: 0;
-                font-size: 18px;
-                cursor: pointer;
-                z-index: 999;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            }
-            
-            .mobile-overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                z-index: 999;
-            }
-            
-            .mobile-overlay.active {
-                display: block;
-            }
-        }
-        
-        @media (min-width: 769px) {
-            .mobile-close-btn,
-            .mobile-menu-trigger,
-            .mobile-overlay {
-                display: none !important;
             }
         }
         
@@ -537,201 +447,6 @@
             color: white;
         }
         
-        .mobile-close-btn {
-            display: none;
-        }
-        
-        .mobile-menu-trigger {
-            display: none;
-        }
-        
-        .mobile-overlay {
-            display: none;
-        }
-        
-        @media (max-width: 768px) {
-            .mobile-menu-trigger {
-                display: block !important;
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: var(--muted-green);
-                color: white;
-                border: none;
-                padding: 8px 12px;
-                border-radius: 0;
-                font-size: 18px;
-                cursor: pointer;
-                z-index: 999;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            }
-            
-            .mobile-close-btn {
-                display: block !important;
-                position: absolute;
-                top: 10px;
-                right: 15px;
-                background: none;
-                border: none;
-                font-size: 24px;
-                cursor: pointer;
-                color: var(--black);
-                padding: 5px;
-            }
-        }
-        
-        .file-input {
-            margin: 4px 0;
-        }
-        
-        .file-input label {
-            font-size: 11px;
-            color: var(--black);
-            margin-bottom: 2px;
-        }
-        
-        .file-input input[type="file"] {
-            margin: 2px 0;
-            font-size: 10px;
-        }
-        
-        .log-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            font-size: 12px;
-        }
-        
-        .log-table th, .log-table td {
-            border: 1px solid #dee2e6;
-            padding: 6px;
-            text-align: center;
-            vertical-align: top;
-        }
-        
-        .log-table th {
-            background: linear-gradient(135deg, var(--muted-green) 0%, #8b9a7d 100%);
-            color: white;
-            font-weight: 500;
-            font-size: 13px;
-            cursor: grab;
-            user-select: none;
-        }
-        
-        .log-table th:active {
-            cursor: grabbing;
-        }
-        
-        .log-table th.dragging {
-            opacity: 0.5;
-            transform: rotate(5deg);
-        }
-        
-        .log-table th.drag-over {
-            border-left: 4px solid var(--muted-blue);
-            background: linear-gradient(135deg, var(--muted-blue) 0%, #7a8b98 100%);
-        }
-        
-        .log-table .parameter-cell {
-            background: var(--light-gray);
-            font-weight: 500;
-            text-align: right;
-            width: 200px;
-            position: sticky;
-            left: 0;
-            z-index: 1;
-            color: var(--black);
-            border-right: 2px solid var(--muted-green);
-            padding-right: 12px;
-        }
-        
-        .log-table td:not(.parameter-cell) {
-            text-align: center;
-        }
-        
-        .log-table input[type="text"], .log-table input[type="number"], .log-table input[type="date"] {
-            width: 100%;
-            border: none;
-            background: transparent;
-            padding: 4px;
-            font-size: 11px;
-            text-align: center;
-            margin: 2px;
-        }
-        
-        .log-table input[type="checkbox"] {
-            transform: scale(1.2);
-            margin: 2px;
-        }
-        
-        .delete-mix-btn {
-            background: var(--terracotta);
-            color: white;
-            border: none;
-            padding: 2px 6px;
-            border-radius: 0;
-            font-size: 10px;
-            cursor: pointer;
-            margin: 1px;
-        }
-        
-        .delete-mix-btn:hover {
-            background: #bf360c;
-        }
-        
-        .table-container {
-            overflow-x: auto;
-            max-width: 100%;
-        }
-        
-        @media (max-width: 768px) {
-            .table-container {
-                font-size: 11px;
-            }
-            
-            .log-table {
-                font-size: 10px;
-                min-width: 600px; /* Ensure table doesn't get too cramped */
-            }
-            
-            .log-table th, .log-table td {
-                padding: 4px;
-            }
-            
-            .log-table .parameter-cell {
-                width: 100px;
-                font-size: 9px;
-                padding-right: 6px;
-            }
-            
-            .log-table input[type="text"], 
-            .log-table input[type="number"], 
-            .log-table input[type="date"] {
-                font-size: 10px;
-                padding: 2px;
-            }
-        }
-        
-        .reference-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .reference-box {
-            background: var(--light-gray);
-            padding: 20px;
-            border-radius: 0;
-            border-left: 4px solid var(--muted-green);
-        }
-        
-        .reference-box h3 {
-            color: var(--black);
-            margin-top: 0;
-            font-weight: 500;
-        }
-        
         .alert {
             background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 100%);
             border: 1px solid var(--terracotta);
@@ -763,23 +478,96 @@
             display: none;
             font-size: 10px;
         }
+        
+        .log-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 12px;
+        }
+        
+        .log-table th, .log-table td {
+            border: 1px solid #dee2e6;
+            padding: 6px;
+            text-align: center;
+            vertical-align: top;
+        }
+        
+        .log-table th {
+            background: linear-gradient(135deg, var(--muted-green) 0%, #8b9a7d 100%);
+            color: white;
+            font-weight: 500;
+            font-size: 13px;
+        }
+        
+        .log-table .parameter-cell {
+            background: var(--light-gray);
+            font-weight: 500;
+            text-align: right;
+            width: 200px;
+            position: sticky;
+            left: 0;
+            z-index: 1;
+            color: var(--black);
+            border-right: 2px solid var(--muted-green);
+            padding-right: 12px;
+        }
+        
+        .log-table input[type="text"], .log-table input[type="number"], .log-table input[type="date"] {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 4px;
+            font-size: 11px;
+            text-align: center;
+            margin: 2px;
+        }
+        
+        .log-table input[type="checkbox"] {
+            transform: scale(1.2);
+            margin: 2px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            .table-container {
+                font-size: 11px;
+            }
+            
+            .log-table {
+                font-size: 10px;
+                min-width: 600px;
+            }
+            
+            .log-table th, .log-table td {
+                padding: 4px;
+            }
+            
+            .log-table .parameter-cell {
+                width: 100px;
+                font-size: 9px;
+                padding-right: 6px;
+            }
+            
+            .log-table input[type="text"], 
+            .log-table input[type="number"], 
+            .log-table input[type="date"] {
+                font-size: 10px;
+                padding: 2px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Concrete Calculator & Mix Log</h1>
         
-        <!-- Mobile Menu Trigger -->
-        <button class="mobile-menu-trigger" onclick="toggleMobileMenu()">☰</button>
-        
-        <!-- Mobile Overlay -->
-        <div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
-        
         <!-- Save/Load Controls -->
         <div class="save-controls" id="saveControls">
-            <!-- Mobile Close Button -->
-            <button class="mobile-close-btn" onclick="closeMobileMenu()">×</button>
-            
             <h3 class="controls-title-compact" onclick="toggleDropdown()">
                 Save & Load Data
                 <span class="dropdown-arrow">▼</span>
@@ -823,35 +611,41 @@
                 <h2>Input Parameters</h2>
                 
                 <div class="input-group">
-                    <label>Volume & Waste</label>
-                    <div class="volume-waste-row">
+                    <label>Mix Ratio (Portland : Sand) - Mold Volume (in³) - Waste Factor (%)</label>
+                    <div class="first-row-inputs">
                         <div>
-                            <label for="volume">Mold Volume (cubic inches)</label>
+                            <label for="ratioPortland">Portland</label>
+                            <input type="number" id="ratioPortland" step="0.1" value="1" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label for="ratioSand">Sand</label>
+                            <input type="number" id="ratioSand" step="0.1" value="2" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label for="volume">Mold Volume</label>
                             <input type="number" id="volume" step="0.1" value="10" oninput="calculate()">
                         </div>
                         <div>
-                            <label for="waste">Waste Factor (%)</label>
+                            <label for="waste">Waste Factor</label>
                             <input type="number" id="waste" step="1" value="10" min="0" max="50" oninput="calculate()">
                         </div>
                     </div>
                 </div>
-                
-                <div class="input-group">
-                    <label>Mix Ratio (Portland : Sand : Water)</label>
-                    <div class="ratio-inputs">
-                        <input type="number" id="ratioPortland" step="0.1" value="1" placeholder="Portland" oninput="calculate()">
-                        <input type="number" id="ratioSand" step="0.1" value="2" placeholder="Sand" oninput="calculate()">
-                        <input type="number" id="ratioWater" step="0.1" value="1" placeholder="Water" oninput="calculate()">
-                    </div>
-                </div>
 
                 <div class="input-group">
-                    <label>Plasticizer</label>
-                    <div class="plasticizer-controls">
-                        <input type="checkbox" id="plasticizerEnabled" onchange="togglePlasticizer()" checked>
-                        <div class="plasticizer-input" id="plasticizerInputs">
-                            <input type="number" id="plasticizerPercent" step="0.01" value="0.21" min="0" max="5" oninput="calculate()">
-                            <span>% of cement weight</span>
+                    <label>Material Densities (g/cm³)</label>
+                    <div class="density-grid">
+                        <div>
+                            <label for="densityCement">Cement</label>
+                            <input type="number" id="densityCement" step="0.001" value="1.1" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label for="densitySand">Sand</label>
+                            <input type="number" id="densitySand" step="0.001" value="1.72" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label for="densityWater">Water</label>
+                            <input type="number" id="densityWater" step="0.001" value="1.0" oninput="calculate()">
                         </div>
                     </div>
                 </div>
@@ -883,19 +677,12 @@
                 </div>
 
                 <div class="input-group">
-                    <label>Material Densities (g/cm³)</label>
-                    <div class="density-grid">
-                        <div>
-                            <label for="densityCement">Cement</label>
-                            <input type="number" id="densityCement" step="0.001" value="1.505" oninput="calculate()">
-                        </div>
-                        <div>
-                            <label for="densitySand">Sand</label>
-                            <input type="number" id="densitySand" step="0.001" value="1.602" oninput="calculate()">
-                        </div>
-                        <div>
-                            <label for="densityWater">Water</label>
-                            <input type="number" id="densityWater" step="0.001" value="1.0" oninput="calculate()">
+                    <label>Plasticizer</label>
+                    <div class="plasticizer-controls">
+                        <input type="checkbox" id="plasticizerEnabled" onchange="togglePlasticizer()" checked>
+                        <div class="plasticizer-input" id="plasticizerInputs">
+                            <input type="number" id="plasticizerPercent" step="0.01" value="0.21" min="0" max="5" oninput="calculate()">
+                            <span>% of cement weight</span>
                         </div>
                     </div>
                 </div>
@@ -908,48 +695,48 @@
             <div class="output-section">
                 <h2>Calculated Amounts (grams)</h2>
                 
-                <div class="output-item">
-                    <span>Cement:</span>
-                    <span class="output-value" id="outputCement">0 g</span>
+                <div class="output-content">
+                    <div>
+                        <div class="output-item">
+                            <span>Cement:</span>
+                            <span class="output-value" id="outputCement">0 g</span>
+                        </div>
+                        <div class="output-item">
+                            <span>Sand:</span>
+                            <span class="output-value" id="outputSand">0 g</span>
+                        </div>
+                        <div class="output-item">
+                            <span>Pigment Black:</span>
+                            <span class="output-value" id="outputPigmentBlack">0 g</span>
+                        </div>
+                        <div class="output-item">
+                            <span>Pigment Blue:</span>
+                            <span class="output-value" id="outputPigmentBlue">0 g</span>
+                        </div>
+                        <div class="output-item">
+                            <span>Pigment Green:</span>
+                            <span class="output-value" id="outputPigmentGreen">0 g</span>
+                        </div>
+                        <div class="output-item">
+                            <span>Pigment Orange:</span>
+                            <span class="output-value" id="outputPigmentOrange">0 g</span>
+                        </div>
+                        <div class="output-item">
+                            <span>Pigment Brown:</span>
+                            <span class="output-value" id="outputPigmentBrown">0 g</span>
+                        </div>
+                        <div class="output-item">
+                            <span>Plasticizer:</span>
+                            <span class="output-value" id="outputPlasticizer">0 g</span>
+                        </div>
+                        <div class="output-item" style="border-top: 2px solid var(--muted-green); font-weight: bold;">
+                            <span>Total Mix Weight:</span>
+                            <span class="output-value" id="outputTotal">0 g</span>
+                        </div>
+                    </div>
+                    
+                    <button class="button" onclick="sendToLog()" style="width: 100%; margin-top: 20px; padding: 12px 24px; font-size: 14px;">📋 SEND TO LOG</button>
                 </div>
-                <div class="output-item">
-                    <span>Sand:</span>
-                    <span class="output-value" id="outputSand">0 g</span>
-                </div>
-                <div class="output-item">
-                    <span>Water:</span>
-                    <span class="output-value" id="outputWater">0 g</span>
-                </div>
-                <div class="output-item">
-                    <span>Pigment Black:</span>
-                    <span class="output-value" id="outputPigmentBlack">0 g</span>
-                </div>
-                <div class="output-item">
-                    <span>Pigment Blue:</span>
-                    <span class="output-value" id="outputPigmentBlue">0 g</span>
-                </div>
-                <div class="output-item">
-                    <span>Pigment Green:</span>
-                    <span class="output-value" id="outputPigmentGreen">0 g</span>
-                </div>
-                <div class="output-item">
-                    <span>Pigment Orange:</span>
-                    <span class="output-value" id="outputPigmentOrange">0 g</span>
-                </div>
-                <div class="output-item">
-                    <span>Pigment Brown:</span>
-                    <span class="output-value" id="outputPigmentBrown">0 g</span>
-                </div>
-                <div class="output-item">
-                    <span>Plasticizer:</span>
-                    <span class="output-value" id="outputPlasticizer">0 g</span>
-                </div>
-                <div class="output-item" style="border-top: 2px solid var(--muted-green); font-weight: bold;">
-                    <span>Total Mix Weight:</span>
-                    <span class="output-value" id="outputTotal">0 g</span>
-                </div>
-                
-                <button class="button" onclick="sendToLog()" style="width: 100%; margin-top: 20px; padding: 12px 24px; font-size: 14px;">📋 SEND TO LOG</button>
             </div>
         </div>
     </div>
@@ -962,23 +749,23 @@
                 <thead>
                     <tr>
                         <th class="parameter-cell">Parameter</th>
-                        <th draggable="true" ondragstart="dragStart(event, 1)" ondragover="dragOver(event)" ondrop="dropColumn(event, 1)" ondragend="dragEnd(event)">Mix #1 <button class="delete-mix-btn" onclick="deleteMix(1)">×</button></th>
-                        <th draggable="true" ondragstart="dragStart(event, 2)" ondragover="dragOver(event)" ondrop="dropColumn(event, 2)" ondragend="dragEnd(event)">Mix #2 <button class="delete-mix-btn" onclick="deleteMix(2)">×</button></th>
-                        <th draggable="true" ondragstart="dragStart(event, 3)" ondragover="dragOver(event)" ondrop="dropColumn(event, 3)" ondragend="dragEnd(event)">Mix #3 <button class="delete-mix-btn" onclick="deleteMix(3)">×</button></th>
-                        <th draggable="true" ondragstart="dragStart(event, 4)" ondragover="dragOver(event)" ondrop="dropColumn(event, 4)" ondragend="dragEnd(event)">Mix #4 <button class="delete-mix-btn" onclick="deleteMix(4)">×</button></th>
-                        <th draggable="true" ondragstart="dragStart(event, 5)" ondragover="dragOver(event)" ondrop="dropColumn(event, 5)" ondragend="dragEnd(event)">Mix #5 <button class="delete-mix-btn" onclick="deleteMix(5)">×</button></th>
-                        <th draggable="true" ondragstart="dragStart(event, 6)" ondragover="dragOver(event)" ondrop="dropColumn(event, 6)" ondragend="dragEnd(event)">Mix #6 <button class="delete-mix-btn" onclick="deleteMix(6)">×</button></th>
+                        <th>Mix #1</th>
+                        <th>Mix #2</th>
+                        <th>Mix #3</th>
+                        <th>Mix #4</th>
+                        <th>Mix #5</th>
+                        <th>Mix #6</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td class="parameter-cell">Cast Date</td><td><input type="date" onchange="updateDaysSinceCast(this, 1)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 2)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 3)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 4)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 5)"></td><td><input type="date" onchange="updateDaysSinceCast(this, 6)"></td></tr>
+                    <tr><td class="parameter-cell">Cast Date</td><td><input type="date"></td><td><input type="date"></td><td><input type="date"></td><td><input type="date"></td><td><input type="date"></td><td><input type="date"></td></tr>
                     <tr><td class="parameter-cell">Days Since Cast</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
-                    <tr><td class="parameter-cell">Ratio (P:S:W)</td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td></tr>
+                    <tr><td class="parameter-cell">Ratio (P:S)</td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td><td><input type="text" readonly></td></tr>
                     <tr><td class="parameter-cell">Adjusted Volume (in³)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
                     <tr><td class="parameter-cell">% Pigment Total</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
                     <tr><td class="parameter-cell">Cement (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
                     <tr><td class="parameter-cell">Sand (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
-                    <tr><td class="parameter-cell">Water (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
+                    <tr><td class="parameter-cell">Water (g)</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
                     <tr><td class="parameter-cell">Pigment Black (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
                     <tr><td class="parameter-cell">Pigment Blue (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
                     <tr><td class="parameter-cell">Pigment Green (g)</td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td><td><input type="number" readonly></td></tr>
@@ -999,14 +786,9 @@
         </div>
     </div>
 
-    <!-- Google Drive API Script -->
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script src="https://accounts.google.com/gsi/client"></script>
-
     <script>
         // Dropdown toggle function
         function toggleDropdown() {
-            // Only work on desktop
             if (window.innerWidth > 768) {
                 const sections = document.getElementById('buttonSections');
                 const arrow = document.querySelector('.dropdown-arrow');
@@ -1016,259 +798,12 @@
             }
         }
         
-        // Mobile menu functions
-        function toggleMobileMenu() {
-            const saveControls = document.getElementById('saveControls');
-            const overlay = document.getElementById('mobileOverlay');
-            
-            saveControls.classList.toggle('mobile-open');
-            overlay.classList.toggle('active');
-        }
-        
-        function closeMobileMenu() {
-            const saveControls = document.getElementById('saveControls');
-            const overlay = document.getElementById('mobileOverlay');
-            
-            saveControls.classList.remove('mobile-open');
-            overlay.classList.remove('active');
-        }
-        
-        // Google Drive API Configuration
-        const CLIENT_ID = '350363016695-9itltindfq1hfg72e6tofvqpeshf09tt.apps.googleusercontent.com';
-        const API_KEY = 'AIzaSyBVvpHKO1Xh463eemDZliTCvuk8n6tQebg';
-        const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
-        const SCOPES = 'https://www.googleapis.com/auth/drive.file';
-        const FILENAME = 'concrete-calculator-data.json';
-        
-        let tokenClient;
-        let google_drive_ready = false;
-        let google_drive_file_id = null;
-        
-        // Initialize Google Drive API
-        async function initGoogleDrive() {
-            // Check if we're running on file:// protocol
-            if (window.location.protocol === 'file:') {
-                showMessage('error', 'Google Drive requires HTTPS. Please serve this file through a web server or use localhost.');
-                return;
-            }
-            
-            try {
-                console.log('Initializing Google Drive...');
-                
-                // Initialize gapi client
-                await new Promise((resolve) => {
-                    gapi.load('client', resolve);
-                });
-                
-                await gapi.client.init({
-                    apiKey: API_KEY,
-                    discoveryDocs: [DISCOVERY_DOC],
-                });
-                
-                console.log('gapi client initialized');
-                
-                // Initialize Google Identity Services
-                tokenClient = google.accounts.oauth2.initTokenClient({
-                    client_id: CLIENT_ID,
-                    scope: SCOPES,
-                    callback: async (resp) => {
-                        console.log('OAuth response:', resp);
-                        if (resp.error !== undefined) {
-                            showMessage('error', 'Google Drive authentication failed: ' + resp.error);
-                            return;
-                        }
-                        
-                        google_drive_ready = true;
-                        updateDriveUI();
-                        showMessage('success', 'Connected to Google Drive!');
-                        await findOrCreateFile();
-                    },
-                });
-                
-                console.log('Token client created, requesting access...');
-                tokenClient.requestAccessToken({prompt: 'consent'});
-                
-            } catch (error) {
-                console.error('Error initializing Google Drive:', error);
-                showMessage('error', 'Error connecting to Google Drive: ' + error.message);
-            }
-        }
-        
-        function updateDriveUI() {
-            document.getElementById('authButton').style.display = 'none';
-            document.getElementById('saveToGDrive').style.display = 'inline-flex';
-            document.getElementById('loadFromGDrive').style.display = 'inline-flex';
-            document.getElementById('signOutButton').style.display = 'inline-flex';
-            
-            if (google_drive_file_id) {
-                document.getElementById('driveStatus').textContent = `✅ Connected - File: ${FILENAME}`;
-            } else {
-                document.getElementById('driveStatus').textContent = '🔍 Connected - Searching for file...';
-            }
-        }
-        
-        function signOutGoogleDrive() {
-            const token = gapi.client.getToken();
-            if (token !== null) {
-                google.accounts.oauth2.revoke(token.access_token);
-                gapi.client.setToken('');
-            }
-            
-            google_drive_ready = false;
-            google_drive_file_id = null;
-            
-            document.getElementById('authButton').style.display = 'inline-flex';
-            document.getElementById('saveToGDrive').style.display = 'none';
-            document.getElementById('loadFromGDrive').style.display = 'none';
-            document.getElementById('signOutButton').style.display = 'none';
-            document.getElementById('driveStatus').textContent = '';
-            
-            showMessage('success', 'Signed out from Google Drive');
-        }
-        
-        // Find existing file or create new one
-        async function findOrCreateFile() {
-            try {
-                console.log('Searching for existing file...');
-                // Search for existing file
-                const response = await gapi.client.drive.files.list({
-                    q: `name='${FILENAME}' and parents in 'root'`,
-                    fields: 'files(id, name)'
-                });
-                
-                if (response.result.files.length > 0) {
-                    google_drive_file_id = response.result.files[0].id;
-                    document.getElementById('driveStatus').textContent = `✅ Connected - File: ${FILENAME}`;
-                    showMessage('success', 'Found existing data file in Google Drive');
-                } else {
-                    // Create new file with empty structure
-                    await createNewFile();
-                }
-            } catch (error) {
-                console.error('Error finding file:', error);
-                showMessage('error', 'Error connecting to Google Drive: ' + error.message);
-            }
-        }
-        
-        async function createNewFile() {
-            try {
-                console.log('Creating new file...');
-                
-                // Create empty data structure
-                const emptyData = {
-                    calculator: getCalculatorData(),
-                    mixLog: [],
-                    timestamp: new Date().toISOString(),
-                    version: '1.0'
-                };
-                
-                const dataStr = JSON.stringify(emptyData, null, 2);
-                
-                const metadata = {
-                    name: FILENAME,
-                    parents: ['root']
-                };
-                
-                // Create file with content
-                const response = await gapi.client.request({
-                    path: 'https://www.googleapis.com/upload/drive/v3/files',
-                    method: 'POST',
-                    params: {
-                        uploadType: 'multipart'
-                    },
-                    headers: {
-                        'Content-Type': 'multipart/related; boundary="foo_bar_baz"'
-                    },
-                    body: [
-                        '--foo_bar_baz',
-                        'Content-Type: application/json; charset=UTF-8',
-                        '',
-                        JSON.stringify(metadata),
-                        '--foo_bar_baz',
-                        'Content-Type: application/json',
-                        '',
-                        dataStr,
-                        '--foo_bar_baz--'
-                    ].join('\r\n')
-                });
-                
-                google_drive_file_id = JSON.parse(response.body).id;
-                document.getElementById('driveStatus').textContent = `✅ Connected - File: ${FILENAME} (New)`;
-                showMessage('success', 'Created new data file in Google Drive');
-            } catch (error) {
-                console.error('Error creating file:', error);
-                showMessage('error', 'Error creating file: ' + error.message);
-            }
-        }
-        
-        // Save data to Google Drive
-        async function saveToGoogleDrive() {
-            if (!google_drive_ready || !google_drive_file_id) {
-                showMessage('error', 'Please connect to Google Drive first');
-                return;
-            }
-            
-            try {
-                const data = {
-                    calculator: getCalculatorData(),
-                    mixLog: getMixLogData(),
-                    timestamp: new Date().toISOString(),
-                    version: '1.0'
-                };
-                
-                const dataStr = JSON.stringify(data, null, 2);
-                
-                const response = await gapi.client.request({
-                    path: `https://www.googleapis.com/upload/drive/v3/files/${google_drive_file_id}`,
-                    method: 'PATCH',
-                    params: {
-                        uploadType: 'media'
-                    },
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: dataStr
-                });
-                
-                showMessage('success', 'Data saved to Google Drive successfully!');
-            } catch (error) {
-                console.error('Error saving to Drive:', error);
-                showMessage('error', 'Error saving to Google Drive: ' + error.message);
-            }
-        }
-        
-        // Load data from Google Drive
-        async function loadFromGoogleDrive() {
-            if (!google_drive_ready || !google_drive_file_id) {
-                showMessage('error', 'Please connect to Google Drive first');
-                return;
-            }
-            
-            try {
-                const response = await gapi.client.drive.files.get({
-                    fileId: google_drive_file_id,
-                    alt: 'media'
-                });
-                
-                const data = JSON.parse(response.body);
-                
-                setCalculatorData(data.calculator);
-                setMixLogData(data.mixLog);
-                calculate();
-                
-                showMessage('success', `Data loaded from Google Drive! (${new Date(data.timestamp).toLocaleString()})`);
-            } catch (error) {
-                console.error('Error loading from Drive:', error);
-                showMessage('error', 'Error loading from Google Drive: ' + error.message);
-            }
-        }
-        
+        // Calculate function
         function calculate() {
             // Get input values
             const volume = parseFloat(document.getElementById('volume').value) || 0;
             const ratioPortland = parseFloat(document.getElementById('ratioPortland').value) || 1;
             const ratioSand = parseFloat(document.getElementById('ratioSand').value) || 2;
-            const ratioWater = parseFloat(document.getElementById('ratioWater').value) || 1;
             const wasteFactor = parseFloat(document.getElementById('waste').value) || 0;
             const plasticizerPercent = parseFloat(document.getElementById('plasticizerPercent').value) || 0.21;
             
@@ -1278,10 +813,9 @@
             const pigmentOrange = parseFloat(document.getElementById('pigmentOrange').value) || 0;
             const pigmentBrown = parseFloat(document.getElementById('pigmentBrown').value) || 0;
             
-            // Material densities (adjustable)
-            const densityCement = parseFloat(document.getElementById('densityCement').value) || 1.505;
-            const densitySand = parseFloat(document.getElementById('densitySand').value) || 1.602;
-            const densityWater = parseFloat(document.getElementById('densityWater').value) || 1.0;
+            // Material densities
+            const densityCement = parseFloat(document.getElementById('densityCement').value) || 1.1;
+            const densitySand = parseFloat(document.getElementById('densitySand').value) || 1.72;
             
             // Convert cubic inches to cm³
             const volumeCm3 = volume * 16.387;
@@ -1290,17 +824,15 @@
             const adjustedVolume = volumeCm3 * (1 + wasteFactor / 100);
             
             // Calculate total ratio parts
-            const totalRatio = ratioPortland + ratioSand + ratioWater;
+            const totalRatio = ratioPortland + ratioSand;
             
             // Calculate volume for each component
             const cementVolume = (ratioPortland / totalRatio) * adjustedVolume;
             const sandVolume = (ratioSand / totalRatio) * adjustedVolume;
-            const waterVolume = (ratioWater / totalRatio) * adjustedVolume;
             
             // Calculate weights
             const cementWeight = cementVolume * densityCement;
             const sandWeight = sandVolume * densitySand;
-            const waterWeight = waterVolume * densityWater;
             
             // Calculate plasticizer weight (only if enabled)
             const plasticizerEnabled = document.getElementById('plasticizerEnabled').checked;
@@ -1323,14 +855,13 @@
             }
             
             // Calculate total weight
-            const totalWeight = cementWeight + sandWeight + waterWeight + plasticizerWeight +
+            const totalWeight = cementWeight + sandWeight + plasticizerWeight +
                               pigmentBlackWeight + pigmentBlueWeight + pigmentGreenWeight + 
                               pigmentOrangeWeight + pigmentBrownWeight;
             
             // Update output displays
             document.getElementById('outputCement').textContent = Math.round(cementWeight * 10) / 10 + ' g';
             document.getElementById('outputSand').textContent = Math.round(sandWeight * 10) / 10 + ' g';
-            document.getElementById('outputWater').textContent = Math.round(waterWeight * 10) / 10 + ' g';
             document.getElementById('outputPlasticizer').textContent = Math.round(plasticizerWeight * 10) / 10 + ' g';
             document.getElementById('outputPigmentBlack').textContent = Math.round(pigmentBlackWeight * 10) / 10 + ' g';
             document.getElementById('outputPigmentBlue').textContent = Math.round(pigmentBlueWeight * 10) / 10 + ' g';
@@ -1356,45 +887,24 @@
             calculate();
         }
         
-        function updateDaysSinceCast(dateInput, mixNumber) {
-            if (dateInput.value) {
-                const castDate = new Date(dateInput.value);
-                const today = new Date();
-                const timeDiff = today.getTime() - castDate.getTime();
-                const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                
-                const tbody = document.getElementById('logTable').getElementsByTagName('tbody')[0];
-                const daysSinceRow = tbody.getElementsByTagName('tr')[1];
-                const daysSinceInput = daysSinceRow.getElementsByTagName('input')[mixNumber - 1];
-                daysSinceInput.value = daysDiff >= 0 ? daysDiff : '';
-            }
-            autoSave();
-        }
-        
         function sendToLog() {
             const table = document.getElementById('logTable');
-            
-            // Count current columns to determine next mix number
-            const headerRow = table.getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
-            const currentCols = headerRow.getElementsByTagName('th').length - 1; // Subtract 1 for parameter column
-            
-            // Find the first empty column instead of always adding new
-            let columnIndex = -1;
             const tbody = table.getElementsByTagName('tbody')[0];
             const firstRow = tbody.getElementsByTagName('tr')[0]; // Cast Date row
             
-            for (let i = 0; i < currentCols; i++) {
-                const input = firstRow.getElementsByTagName('input')[i];
-                if (!input.value) {
+            // Find the first empty column
+            let columnIndex = -1;
+            const inputs = firstRow.getElementsByTagName('input');
+            for (let i = 0; i < inputs.length; i++) {
+                if (!inputs[i].value) {
                     columnIndex = i;
                     break;
                 }
             }
             
-            // If no empty column found, add new column
             if (columnIndex === -1) {
-                addNewMixColumn();
-                columnIndex = currentCols;
+                alert('All columns are full. Please clear a column first.');
+                return;
             }
             
             // Get current calculator values
@@ -1404,7 +914,6 @@
             
             const ratioPortland = parseFloat(document.getElementById('ratioPortland').value) || 1;
             const ratioSand = parseFloat(document.getElementById('ratioSand').value) || 2;
-            const ratioWater = parseFloat(document.getElementById('ratioWater').value) || 1;
             const pigmentTotal = (parseFloat(document.getElementById('pigmentBlack').value) || 0) +
                                (parseFloat(document.getElementById('pigmentBlue').value) || 0) +
                                (parseFloat(document.getElementById('pigmentGreen').value) || 0) +
@@ -1414,7 +923,6 @@
             // Get calculated values from the output
             const cementWeight = parseFloat(document.getElementById('outputCement').textContent.replace(' g', ''));
             const sandWeight = parseFloat(document.getElementById('outputSand').textContent.replace(' g', ''));
-            const waterWeight = parseFloat(document.getElementById('outputWater').textContent.replace(' g', ''));
             const plasticizerWeight = parseFloat(document.getElementById('outputPlasticizer').textContent.replace(' g', ''));
             const pigmentBlackWeight = parseFloat(document.getElementById('outputPigmentBlack').textContent.replace(' g', ''));
             const pigmentBlueWeight = parseFloat(document.getElementById('outputPigmentBlue').textContent.replace(' g', ''));
@@ -1428,18 +936,13 @@
             // Set today's date
             dataRows[0].getElementsByTagName('input')[columnIndex].value = new Date().toISOString().split('T')[0];
             
-            // Auto-calculate days since cast (will be 0 for today)
-            updateDaysSinceCast(dataRows[0].getElementsByTagName('input')[columnIndex], columnIndex + 1);
-            
-            // Fill calculated values - FIXED: Make sure we're setting the ratio correctly
-            const ratioInput = dataRows[2].getElementsByTagName('input')[columnIndex];
-            ratioInput.value = `${ratioPortland}:${ratioSand}:${ratioWater}`;
-            
+            // Fill calculated values
+            dataRows[2].getElementsByTagName('input')[columnIndex].value = `${ratioPortland}:${ratioSand}`;
             dataRows[3].getElementsByTagName('input')[columnIndex].value = adjustedVolumeInches.toFixed(2);
             dataRows[4].getElementsByTagName('input')[columnIndex].value = pigmentTotal.toFixed(1);
             dataRows[5].getElementsByTagName('input')[columnIndex].value = cementWeight.toFixed(1);
             dataRows[6].getElementsByTagName('input')[columnIndex].value = sandWeight.toFixed(1);
-            dataRows[7].getElementsByTagName('input')[columnIndex].value = waterWeight.toFixed(1);
+            // Water is manual input - skip row 7
             dataRows[8].getElementsByTagName('input')[columnIndex].value = pigmentBlackWeight.toFixed(1);
             dataRows[9].getElementsByTagName('input')[columnIndex].value = pigmentBlueWeight.toFixed(1);
             dataRows[10].getElementsByTagName('input')[columnIndex].value = pigmentGreenWeight.toFixed(1);
@@ -1455,235 +958,6 @@
             
             // Auto-save
             autoSave();
-        }
-        
-        
-        // Drag and Drop functionality
-        let draggedColumnIndex = null;
-        
-        function dragStart(event, columnIndex) {
-            draggedColumnIndex = columnIndex;
-            event.target.classList.add('dragging');
-            event.dataTransfer.effectAllowed = 'move';
-            event.dataTransfer.setData('text/html', event.target.outerHTML);
-        }
-        
-        function dragOver(event) {
-            event.preventDefault();
-            event.dataTransfer.dropEffect = 'move';
-            
-            // Add visual feedback
-            if (event.target.tagName === 'TH' && !event.target.classList.contains('parameter-cell')) {
-                event.target.classList.add('drag-over');
-            }
-        }
-        
-        function dragEnd(event) {
-            event.target.classList.remove('dragging');
-            
-            // Remove all drag-over classes
-            const headers = document.querySelectorAll('.log-table th');
-            headers.forEach(header => header.classList.remove('drag-over'));
-        }
-        
-        function dropColumn(event, targetColumnIndex) {
-            event.preventDefault();
-            
-            if (draggedColumnIndex === null || draggedColumnIndex === targetColumnIndex) {
-                return;
-            }
-            
-            const table = document.getElementById('logTable');
-            const headerRow = table.getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
-            const tbody = table.getElementsByTagName('tbody')[0];
-            
-            // Get all data from the dragged column
-            const columnData = [];
-            const rows = tbody.getElementsByTagName('tr');
-            
-            // Extract data from dragged column
-            for (let i = 0; i < rows.length; i++) {
-                const cells = rows[i].getElementsByTagName('td');
-                if (draggedColumnIndex < cells.length) {
-                    const cell = cells[draggedColumnIndex];
-                    const input = cell.querySelector('input');
-                    let value = '';
-                    
-                    if (input) {
-                        if (input.type === 'checkbox') {
-                            value = input.checked;
-                        } else {
-                            value = input.value;
-                        }
-                    }
-                    columnData.push(value);
-                }
-            }
-            
-            // Remove the dragged column
-            headerRow.deleteCell(draggedColumnIndex);
-            for (let i = 0; i < rows.length; i++) {
-                rows[i].deleteCell(draggedColumnIndex);
-            }
-            
-            // Adjust target index if dragging from left to right
-            let adjustedTargetIndex = targetColumnIndex;
-            if (draggedColumnIndex < targetColumnIndex) {
-                adjustedTargetIndex--;
-            }
-            
-            // Insert the column at the new position
-            const newHeader = document.createElement('th');
-            newHeader.draggable = true;
-            newHeader.innerHTML = `Mix #${adjustedTargetIndex} <button class="delete-mix-btn" onclick="deleteMix(${adjustedTargetIndex})">×</button>`;
-            newHeader.setAttribute('ondragstart', `dragStart(event, ${adjustedTargetIndex})`);
-            newHeader.setAttribute('ondragover', 'dragOver(event)');
-            newHeader.setAttribute('ondrop', `dropColumn(event, ${adjustedTargetIndex})`);
-            newHeader.setAttribute('ondragend', 'dragEnd(event)');
-            
-            if (adjustedTargetIndex >= headerRow.cells.length) {
-                headerRow.appendChild(newHeader);
-            } else {
-                headerRow.insertBefore(newHeader, headerRow.cells[adjustedTargetIndex]);
-            }
-            
-            // Insert data cells
-            for (let i = 0; i < rows.length; i++) {
-                const newCell = document.createElement('td');
-                const value = columnData[i];
-                
-                // Determine input type based on row
-                if (i === 0) { // Cast Date
-                    newCell.innerHTML = `<input type="date" onchange="updateDaysSinceCast(this, ${adjustedTargetIndex})">`;
-                    if (value) newCell.querySelector('input').value = value;
-                } else if (i === 2) { // Ratio - readonly text (FIXED: Handle this before the number check)
-                    newCell.innerHTML = '<input type="text" readonly>';
-                    if (value) newCell.querySelector('input').value = value;
-                } else if ([1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].includes(i)) { // Readonly calculated fields
-                    newCell.innerHTML = '<input type="number" readonly>';
-                    if (value) newCell.querySelector('input').value = value;
-                } else if (i === 14) { // Slurry Coat checkbox
-                    newCell.innerHTML = '<input type="checkbox">';
-                    if (typeof value === 'boolean') newCell.querySelector('input').checked = value;
-                } else if (i === 17) { // Empty row
-                    newCell.innerHTML = '';
-                } else if (i === 18) { // Bubble Rating
-                    newCell.innerHTML = '<input type="number" min="1" max="10">';
-                    if (value) newCell.querySelector('input').value = value;
-                } else { // Text fields
-                    newCell.innerHTML = '<input type="text">';
-                    if (value) newCell.querySelector('input').value = value;
-                }
-                
-                if (adjustedTargetIndex >= rows[i].cells.length) {
-                    rows[i].appendChild(newCell);
-                } else {
-                    rows[i].insertBefore(newCell, rows[i].cells[adjustedTargetIndex]);
-                }
-            }
-            
-            // Renumber all columns
-            renumberColumns();
-            
-            draggedColumnIndex = null;
-            showMessage('success', `Column moved successfully!`);
-            autoSave();
-        }
-        
-        function renumberColumns() {
-            const table = document.getElementById('logTable');
-            const headerRow = table.getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
-            const tbody = table.getElementsByTagName('tbody')[0];
-            const headers = headerRow.getElementsByTagName('th');
-            
-            // Renumber headers and update event handlers
-            for (let i = 1; i < headers.length; i++) { // Start from 1 to skip parameter column
-                const mixNumber = i;
-                headers[i].innerHTML = `Mix #${mixNumber} <button class="delete-mix-btn" onclick="deleteMix(${mixNumber})">×</button>`;
-                headers[i].setAttribute('ondragstart', `dragStart(event, ${mixNumber})`);
-                headers[i].setAttribute('ondrop', `dropColumn(event, ${mixNumber})`);
-            }
-            
-            // Update date input handlers
-            const dateInputs = tbody.getElementsByTagName('tr')[0].getElementsByTagName('input');
-            for (let i = 0; i < dateInputs.length; i++) {
-                dateInputs[i].setAttribute('onchange', `updateDaysSinceCast(this, ${i + 1})`);
-            }
-        }
-        
-        function addNewMixColumn() {
-            const table = document.getElementById('logTable');
-            const headerRow = table.getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
-            const tbody = table.getElementsByTagName('tbody')[0];
-            
-            const mixNumber = headerRow.getElementsByTagName('th').length; // Current number including parameter column
-            
-            // Add header with delete button and drag functionality
-            const newHeader = document.createElement('th');
-            newHeader.draggable = true;
-            newHeader.innerHTML = `Mix #${mixNumber} <button class="delete-mix-btn" onclick="deleteMix(${mixNumber})">×</button>`;
-            newHeader.setAttribute('ondragstart', `dragStart(event, ${mixNumber})`);
-            newHeader.setAttribute('ondragover', 'dragOver(event)');
-            newHeader.setAttribute('ondrop', `dropColumn(event, ${mixNumber})`);
-            newHeader.setAttribute('ondragend', 'dragEnd(event)');
-            headerRow.appendChild(newHeader);
-            
-            // Add cells to main log table
-            const rows = tbody.getElementsByTagName('tr');
-            for (let i = 0; i < rows.length; i++) {
-                const newCell = document.createElement('td');
-                
-                // Determine input type based on row
-                if (i === 0) { // Cast Date
-                    newCell.innerHTML = `<input type="date" onchange="updateDaysSinceCast(this, ${mixNumber})">`;
-                } else if ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].includes(i)) { // Readonly calculated fields
-                    newCell.innerHTML = '<input type="number" readonly>';
-                } else if (i === 14) { // Slurry Coat checkbox
-                    newCell.innerHTML = '<input type="checkbox">';
-                } else if (i === 2) { // Ratio - readonly text
-                    newCell.innerHTML = '<input type="text" readonly>';
-                } else if (i === 17) { // Empty row
-                    newCell.innerHTML = '';
-                } else if (i === 18) { // Bubble Rating
-                    newCell.innerHTML = '<input type="number" min="1" max="10">';
-                } else { // Text fields
-                    newCell.innerHTML = '<input type="text">';
-                }
-                
-                rows[i].appendChild(newCell);
-            }
-        }
-        
-        function deleteMix(mixNumber) {
-            if (confirm(`Are you sure you want to delete Mix #${mixNumber}? This cannot be undone.`)) {
-                const table = document.getElementById('logTable');
-                const headerRow = table.getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
-                const tbody = table.getElementsByTagName('tbody')[0];
-                
-                // Remove header column
-                headerRow.deleteCell(mixNumber);
-                
-                // Remove cells from all rows in main table
-                const rows = tbody.getElementsByTagName('tr');
-                for (let i = 0; i < rows.length; i++) {
-                    rows[i].deleteCell(mixNumber);
-                }
-                
-                // Renumber remaining headers and update delete buttons
-                const headers = headerRow.getElementsByTagName('th');
-                for (let i = 1; i < headers.length; i++) { // Start from 1 to skip parameter column
-                    headers[i].innerHTML = `Mix #${i} <button class="delete-mix-btn" onclick="deleteMix(${i})">×</button>`;
-                }
-                
-                // Update onchange handlers for date inputs
-                const dateInputs = tbody.getElementsByTagName('tr')[0].getElementsByTagName('input');
-                for (let i = 0; i < dateInputs.length; i++) {
-                    dateInputs[i].setAttribute('onchange', `updateDaysSinceCast(this, ${i + 1})`);
-                }
-                
-                showMessage('success', `Mix #${mixNumber} deleted successfully!`);
-                autoSave();
-            }
         }
         
         // Save/Load Functions
@@ -1766,7 +1040,6 @@
                 document.getElementById('volume').value = '10';
                 document.getElementById('ratioPortland').value = '1';
                 document.getElementById('ratioSand').value = '2';
-                document.getElementById('ratioWater').value = '1';
                 document.getElementById('waste').value = '10';
                 document.getElementById('plasticizerPercent').value = '0.21';
                 document.getElementById('plasticizerEnabled').checked = true;
@@ -1775,9 +1048,8 @@
                 document.getElementById('pigmentGreen').value = '0';
                 document.getElementById('pigmentOrange').value = '0';
                 document.getElementById('pigmentBrown').value = '0';
-                document.getElementById('densityCement').value = '1.505';
-                document.getElementById('densitySand').value = '1.602';
-                document.getElementById('densityWater').value = '1.0';
+                document.getElementById('densityCement').value = '1.1';
+                document.getElementById('densitySand').value = '1.72';
                 
                 // Clear all mix log inputs
                 const tbody = document.getElementById('logTable').getElementsByTagName('tbody')[0];
@@ -1797,7 +1069,6 @@
         }
         
         function autoSave() {
-            // Auto-save to localStorage for persistence
             const data = {
                 calculator: getCalculatorData(),
                 mixLog: getMixLogData(),
@@ -1824,7 +1095,6 @@
                 volume: document.getElementById('volume').value,
                 ratioPortland: document.getElementById('ratioPortland').value,
                 ratioSand: document.getElementById('ratioSand').value,
-                ratioWater: document.getElementById('ratioWater').value,
                 waste: document.getElementById('waste').value,
                 plasticizerPercent: document.getElementById('plasticizerPercent').value,
                 plasticizerEnabled: document.getElementById('plasticizerEnabled').checked,
@@ -1834,8 +1104,7 @@
                 pigmentOrange: document.getElementById('pigmentOrange').value,
                 pigmentBrown: document.getElementById('pigmentBrown').value,
                 densityCement: document.getElementById('densityCement').value,
-                densitySand: document.getElementById('densitySand').value,
-                densityWater: document.getElementById('densityWater').value
+                densitySand: document.getElementById('densitySand').value
             };
         }
         
@@ -1844,7 +1113,6 @@
             document.getElementById('volume').value = data.volume || '10';
             document.getElementById('ratioPortland').value = data.ratioPortland || '1';
             document.getElementById('ratioSand').value = data.ratioSand || '2';
-            document.getElementById('ratioWater').value = data.ratioWater || '1';
             document.getElementById('waste').value = data.waste || '10';
             document.getElementById('plasticizerPercent').value = data.plasticizerPercent || '0.21';
             document.getElementById('plasticizerEnabled').checked = data.plasticizerEnabled !== false;
@@ -1853,9 +1121,8 @@
             document.getElementById('pigmentGreen').value = data.pigmentGreen || '0';
             document.getElementById('pigmentOrange').value = data.pigmentOrange || '0';
             document.getElementById('pigmentBrown').value = data.pigmentBrown || '0';
-            document.getElementById('densityCement').value = data.densityCement || '1.505';
-            document.getElementById('densitySand').value = data.densitySand || '1.602';
-            document.getElementById('densityWater').value = data.densityWater || '1.0';
+            document.getElementById('densityCement').value = data.densityCement || '1.1';
+            document.getElementById('densitySand').value = data.densitySand || '1.72';
             togglePlasticizer();
         }
         
@@ -1883,69 +1150,26 @@
             if (!data || data.length === 0) return;
             
             const tbody = document.getElementById('logTable').getElementsByTagName('tbody')[0];
-            const headerRow = document.getElementById('logTable').getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
+            const rows = tbody.getElementsByTagName('tr');
             
-            // Calculate how many columns we need based on saved data
-            let maxColumns = 0;
-            for (let i = 0; i < data.length; i++) {
-                if (data[i] && data[i].length > maxColumns) {
-                    maxColumns = data[i].length;
-                }
-            }
-            
-            console.log('Need columns:', maxColumns);
-            
-            // Add new columns if needed
-            let columnsAdded = 0;
-            while (columnsAdded < 20) { // Safety limit
-                let currentColumns = headerRow.getElementsByTagName('th').length - 1; // Recalculate each time
-                
-                if (currentColumns >= maxColumns) {
-                    break; // We have enough columns
-                }
-                
-                try {
-                    console.log('Adding column, currently have:', currentColumns);
-                    addNewMixColumn();
-                    columnsAdded++;
-                } catch (error) {
-                    console.error('Error adding column:', error);
-                    showMessage('error', 'Error adding columns: ' + error.message);
-                    break;
-                }
-            }
-            
-            // Now populate the data
-            try {
-                const rows = tbody.getElementsByTagName('tr');
-                for (let i = 0; i < data.length && i < rows.length; i++) {
-                    const inputs = rows[i].getElementsByTagName('input');
-                    for (let j = 0; j < data[i].length && j < inputs.length; j++) {
-                        if (inputs[j]) {
-                            if (inputs[j].type === 'checkbox') {
-                                inputs[j].checked = data[i][j] === true || data[i][j] === 'true';
-                            } else {
-                                inputs[j].value = data[i][j] || '';
-                            }
+            for (let i = 0; i < data.length && i < rows.length; i++) {
+                const inputs = rows[i].getElementsByTagName('input');
+                for (let j = 0; j < data[i].length && j < inputs.length; j++) {
+                    if (inputs[j]) {
+                        if (inputs[j].type === 'checkbox') {
+                            inputs[j].checked = data[i][j] === true || data[i][j] === 'true';
+                        } else {
+                            inputs[j].value = data[i][j] || '';
                         }
                     }
                 }
-                
-                if (columnsAdded > 0) {
-                    showMessage('success', `Loaded data and created ${columnsAdded} new mix columns`);
-                } else {
-                    showMessage('success', 'Data loaded successfully');
-                }
-            } catch (error) {
-                console.error('Error populating data:', error);
-                showMessage('error', 'Error loading data: ' + error.message);
             }
         }
         
         function getMixLogCSV() {
-            const headers = ['Parameter'];
+            const headers = ['Parameter', 'Mix #1', 'Mix #2', 'Mix #3', 'Mix #4', 'Mix #5', 'Mix #6'];
             const parameterNames = [
-                'Cast Date', 'Days Since Cast', 'Ratio (P:S:W)', 'Adjusted Volume (in³)', 
+                'Cast Date', 'Days Since Cast', 'Ratio (P:S)', 'Adjusted Volume (in³)', 
                 '% Pigment Total', 'Cement (g)', 'Sand (g)', 'Water (g)', 
                 'Pigment Black (g)', 'Pigment Blue (g)', 'Pigment Green (g)', 
                 'Pigment Orange (g)', 'Pigment Brown (g)', 'Plasticizer (g)',
@@ -1953,13 +1177,6 @@
                 'Bubble Rating (1-10)', 'Surface Quality', 'Color Evenness', 
                 'Sealer Used', 'Final Impressions'
             ];
-            
-            // Get headers from table
-            const headerRow = document.getElementById('logTable').getElementsByTagName('thead')[0].getElementsByTagName('tr')[0];
-            const headerCells = headerRow.getElementsByTagName('th');
-            for (let i = 1; i < headerCells.length; i++) {
-                headers.push(headerCells[i].textContent.replace(/×/g, '').trim());
-            }
             
             let csv = headers.join(',') + '\n';
             
@@ -2000,6 +1217,23 @@
                 errorElement.style.display = 'block';
                 setTimeout(() => errorElement.style.display = 'none', 5000);
             }
+        }
+        
+        // Google Drive placeholders (simplified for core functionality)
+        function initGoogleDrive() {
+            showMessage('error', 'Google Drive requires HTTPS hosting. Use local save/load instead.');
+        }
+        
+        function saveToGoogleDrive() {
+            showMessage('error', 'Google Drive requires HTTPS hosting.');
+        }
+        
+        function loadFromGoogleDrive() {
+            showMessage('error', 'Google Drive requires HTTPS hosting.');
+        }
+        
+        function signOutGoogleDrive() {
+            showMessage('error', 'Google Drive requires HTTPS hosting.');
         }
         
         // Initialize calculator on page load
